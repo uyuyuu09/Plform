@@ -99,24 +99,6 @@
         </div>
         <!--- End Loading Animation  --->
 
-        <section>
-            <div id="searchErrorModal" class="modal">
-                <div class="modal-background"></div>
-                <div class="modal-content">
-                    <div class="box">
-                        <div class="message is-info">
-                            <div class="message-body" id="searchErrorMsg"></div>
-                        </div>
-                        <div>
-                            <button class="m-1 button is-danger" onclick="closeModal('searchErrorModal')">
-                                戻る
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                         <a class="navbar-item" href="<?= url ?>">
@@ -144,96 +126,120 @@
 
                     <div class="mx-2 pt-0 card-content">
 
-                                    <label class="label">団体名</label>
-                                    <input class="input" id="class_name" type="text" placeholder="正式な団体名を入力">
+                        <label class="label">団体名</label>
+                        <input class="input" id="class_name" type="text" placeholder="正式な団体名を入力">
 
-                                    <br />
-                                    <br />
+                        <br />
+                        <br />
 
-                                    <label class="label">代表者メールアドレス(学校用アカウント)</label>
-                                    <input class="input" id="gmail" type="text" placeholder="半角で入力">
+                        <label class="label">代表者メールアドレス(学校用アカウント)</label>
+                        <input class="input" id="gmail" type="text" placeholder="半角で入力">
 
-                                    <br />
-                                    <br />
+                        <br />
+                        <br />
 
-                                    <label class="label">代表者学籍番号(半角数字で入力)</label>
-                                    <input class="input" id="num" type="number" placeholder="半角数字で入力" max="3900" min="1100">
+                        <label class="label">代表者学籍番号(半角数字で入力)</label>
+                        <input class="input" id="num" type="number" placeholder="半角数字で入力" max="3900" min="1100">
 
-                                    <br />
-                                    <br />
+                        <br />
+                        <br />
 
-                                    <label class="label">代表者氏名</label>
-                                    <input class="input" id="name" type="text" placeholder="氏名を入力(姓と名の間は半角空白で開ける)">
+                        <label class="label">代表者氏名</label>
+                        <input class="input" id="name" type="text" placeholder="氏名を入力(姓と名の間は半角空白で開ける)">
 
-                                    <br />
-                                    <br />
+                        <br />
+                        <br />
 
-                                    <button class="is-size-6 btn-blue" onclick="sendThingsModal()">
-                                        確認
-                                    </button>
+                        <button class="is-size-6 btn-blue" onclick="sendThingsModal()">
+                            確認
+                        </button>
 
-                                    <br />
-
-                                    <hr>
-
-                                    <div class="has-text-centered is-size-6">
-                                        <strong>すでに上記の内容を送信しており、指示情報を編集したい方はこちら</strong>
+                        <!--- modal for checking inputed-text --->
+                        <section>
+                            <div id="checkText" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="modalMsg"></div>
+                                        </div>
+                                        <div>
+                                            <button id="sendCheckedTextsBtn" class="m-1 button is-info" onclick="callsendClassData()">
+                                                送信
+                                            </button>
+                                            <button class="m-1 button is-danger" onclick="closeModal('checkText')">
+                                                入力やりなおし
+                                            </button>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end checking inputed-text modal -->
 
-                                    <br />
+                        <br />
 
-                                    <button id="searchBtn" class="button is-size-6 btn-blue" onclick="searchClass()">
-                                        指示情報を編集する
-                                    </button>
-                                    
-                                    <hr>
-                                    
-                                    <br />
+                        <hr>
 
-                                    <div class="notification is-white is-size-7 p-0 has-text-centered" style="font-family: 'Noto Sans JP', sans-serif;">
-                                        自動で入力されるデータは、すべて放送部が所有する2024年度全学年名簿に基づいています。
+                        <div class="has-text-centered is-size-6">
+                            <strong>すでに上記の内容を送信しており、指示情報を編集したい方はこちら</strong>
+                        </div>
+
+                        <br />
+
+                        <button id="searchBtn" class="button is-size-6 btn-blue" onclick="searchClass()">
+                            指示情報を編集する
+                        </button>
+
+                        <!--- modal for serching class -->
+                        <section>
+                            <div id="searchErrorModal" class="modal">
+                                <div class="modal-background"></div>
+                                    <div class="modal-content">
+                                        <div class="box">
+                                            <div class="message is-info">
+                                                <div class="message-body" id="searchErrorMsg"></div>
+                                            </div>
+                                            <div>
+                                                <button class="m-1 button is-danger" onclick="closeModal('searchErrorModal')">
+                                                    戻る
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
+                            </div>
+                        </section>  
+                        <!--- end serching modal -->   
+
+                        <!--- modal for console error --->
+                        <section>
+                            <div id="checkTextError" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="checkTextErrorMsg"></div>
+                                        </div>
+                                        <div>
+                                            <button class="m-1 button is-danger" onclick="closeModal('checkTextError'); closeModal('checkText')">
+                                                戻る
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end error modal --->                               
+
+                        <hr>
+                                    
+                        <br />
+
+                        <div class="notification is-white is-size-7 p-0 has-text-centered" style="font-family: 'Noto Sans JP', sans-serif;">
+                            自動で入力されるデータは、すべて放送部が所有する2024年度全学年名簿に基づいています。
+                        </div>
 
                     </div>
-
-                    <section>
-                        <div id="checkText" class="modal">
-                            <div class="modal-background"></div>
-                            <div class="modal-content">
-                                <div class="box">
-                                    <div class="message is-info">
-                                        <div class="message-body" id="modalMsg"></div>
-                                    </div>
-                                    <div>
-                                        <button id="sendCheckedTextsBtn" class="m-1 button is-info" onclick="callsendClassData()">
-                                            送信
-                                        </button>
-                                        <button class="m-1 button is-danger" onclick="closeModal('checkText')">
-                                            入力やりなおし
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section>
-                        <div id="checkTextError" class="modal">
-                            <div class="modal-background"></div>
-                            <div class="modal-content">
-                                <div class="box">
-                                    <div class="message is-info">
-                                        <div class="message-body" id="checkTextErrorMsg"></div>
-                                    </div>
-                                    <div>
-                                        <button class="m-1 button is-danger" onclick="closeModal('checkTextError'); closeModal('checkText')">
-                                            戻る
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
 
                 </section>
         </div>
@@ -254,6 +260,7 @@
                 </button>
             </section>
 
+            <!--- modal for end-editing table --->
             <section>
                 <div id="endEditModal" class="modal">
                     <div class="modal-background"></div>
@@ -277,6 +284,7 @@
                     </div>
                 </div>
             </section>
+            <!--- end end-editing modal --->
 
             <br />
 
@@ -412,7 +420,8 @@
                         </section>
 
                         <br />
-                    
+
+                        <!--- modal for checking inputed-text and times -->
                         <section>
                             <div id="checkMusicError" class="modal">
                                 <div class="modal-background"></div>
@@ -433,7 +442,9 @@
                                 </div>
                             </div>
                         </section>
+                        <!--- end checking modal --->
 
+                        <!--- modal for console error about musics --->
                         <section>
                             <div id="checkMusicInputError" class="modal">
                                 <div class="modal-background"></div>
@@ -451,7 +462,9 @@
                                 </div>
                             </div>
                         </section>
+                        <!--- end console error text modal --->
 
+                        <!--- modal for final confirmation about musics --->
                         <section>
                             <div id="showMusicMsgModal" class="modal">
                                 <div class="modal-background"></div>
@@ -469,6 +482,7 @@
                                 </div>
                             </div>
                         </section>
+                        <!--- end final confirmation modal --->
 
                     </section>
 
