@@ -118,7 +118,9 @@ function getData() {
                     let mainMusicTimeData = ss.getSheetByName(classSheetName).getRange("E17").getValue();
                     let classMusicNameData = ss.getSheetByName(classSheetName).getRange("B8:B14").getValues();
                     let classMusicTimeData = ss.getSheetByName(classSheetName).getRange("F8:F14").getValues();
-                    return {mainMusicData, mainMusicTimeData, classMusicNameData, classMusicTimeData, classSheetName};
+                    let musicFadeInData = ss.getSheetByName(classSheetName).getRange("H8:H14").getValues();
+                    let musicFadeOutData = ss.getSheetByName(classSheetName).getRange("I8:I14").getValues();
+                    return {mainMusicData, mainMusicTimeData, classMusicNameData, classMusicTimeData, classSheetName, musicFadeInData, musicFadeOutData};
                 } else {
                     let classSheetName = class_name + ".指示情報";
                     let classData = ss.getSheetByName(classSheetName).getRange("A8:H27").getValues();
@@ -157,11 +159,15 @@ function sendData() {
                     sheet.getRange("A17").setValue(arguments[1]);
                     sheet.getRange("E17").setValue(arguments[2]);
 
-                    for(let i = 0; i < arguments[4].length && i < arguments[5].length; i++) {
+                    for(let i = 0; i < arguments[4].length && i < arguments[5].length && i < arguments[6].length && i < arguments[7].length; i++) {
                         let nameRange = sheet.getRange(i + 8, 2);
                         let timeRange = sheet.getRange(i + 8, 6);
+                        let fadeInRange = sheet.getRange(i + 8, 8);
+                        let fadeOutRange = sheet.getRange(i + 8, 9);
                         nameRange.setValue(arguments[4][i]);
                         timeRange.setValue(arguments[5][i]);
+                        fadeInRange.setValue(arguments[6][i]);
+                        fadeOutRange.setValue(arguments[7][i]);
                     }
 
                     let msg = "HTTPレスポンス : 200 OK<br />送信されました。ページを閉じていただいて構いません。いつでも指示情報を変更することはできますが、期日は守ってください。<br /><br />"

@@ -759,7 +759,9 @@
 
                             document.getElementById(`music_${i + 1}`).value = response.classMusicNameData[i];
                             document.getElementById(`music_${i + 1}_time`).value = response.classMusicTimeData[i];
-                            
+                            document.getElementById(`music_${i + 1}_fadeIn`).value = response.musicFadeInData[i];
+                            document.getElementById(`music_${i + 1}_fadeOut`).value = response.musicFadeOutData[i];
+
                         };
 
                         showFormForSportsFes(classSheetName);
@@ -821,8 +823,10 @@
         activeModal("checkMusicError");
 
         let musicCount = 0;
-        let musicNames = []; // 音源のファイル名を格納する配列
-        let musicTimes = []; // 音源の秒数を格納する配列
+        let musicNames = [];
+        let musicTimes = [];
+        let musicFadeInStr = [];
+        let musicFadeOutStr = [];
         let music_main = document.getElementById("music_main").value;
         let music_main_time = document.getElementById("music_main_time").value;
         let message = `以下の音源内容を送信します。<br /><br />音源ファイル名: ${music_main}<br />音源全体の秒数: ${music_main_time}<br /><br />`;
@@ -830,11 +834,15 @@
         for(let i = 1; i <= 7; i++) {
             let musicName = document.getElementById(`music_${i}`).value;
             let musicTime = document.getElementById(`music_${i}_time`).value;
+            let musicFadeIn = document.getElementById(`music_${i}_fadeIn`).value;
+            let musicFadeOut = document.getElementById(`music_${i}_fadeOut`).value;
             
             if(musicName && musicTime) {
                 musicCount++;
                 musicNames.push(musicName);
                 musicTimes.push(musicTime);
+                musicFadeInStr.push(musicFadeIn);
+                musicFadeOutStr.push(musicFadeOut);
             } else if(musicName !== "" && musicTime === "" || musicName === "" && musicTime !== "") {
                 showMessage("checkMusicInputErrorMsg", "checkMusicInputError", "音源名と秒数はセットで入力してください。");
                 break;
@@ -843,7 +851,7 @@
 
         if(musicCount > 0) {
             for(let i = 0; i < musicNames.length; i++) {
-                message += `音源No.${i + 1}: ${musicNames[i]}<br />秒数: ${musicTimes[i]}<br /><br />`;
+                message += `音源No.${i + 1}: ${musicNames[i]}<br />秒数: ${musicTimes[i]}<br />フェードイン: ${musicFadeInStr[i]}<br />フェードアウト: ${musicFadeOutStr[i]}<br /><br />`;
             }
         }
 
@@ -853,23 +861,30 @@
     function submitMusicDataForSportsFes(user) {
         document.getElementById("submitMusicDataForSportsFesButton").classList.add("is-loading");
 
-        let musicNames = []; // 音源のファイル名を格納する配列
-        let musicTimes = []; // 音源の秒数を格納する配列
+        let musicNames = [];
+        let musicTimes = [];
+        let musicFadeInStr = [];
+        let musicFadeOutStr = [];
+
         let music_main = document.getElementById("music_main").value;
         let music_main_time = document.getElementById("music_main_time").value;
 
         for (let i = 1; i <= 7; i++) {
             let musicName = document.getElementById(`music_${i}`).value;
             let musicTime = document.getElementById(`music_${i}_time`).value;
+            let musicFadeIn = document.getElementById(`music_${i}_fadeIn`).value;
+            let musicFadeOut = document.getElementById(`music_${i}_fadeOut`).value;
             musicNames.push(musicName);
             musicTimes.push(musicTime);
+            musicFadeInStr.push(musicFadeIn);
+            musicFadeOutStr.push(musicFadeOut);
         }
 
         google.script.run.withSuccessHandler(function(msg) {
             document.getElementById("submitMusicDataForSportsFesButton").classList.remove("is-loading");
             showMessage("showMusicMsg", "showMusicMsgModal", msg + "<div class='is-size-5'>期日: <?= deadLine ?></div>");
             closeModal('checkMusicError');
-        }).sendData('MusicDataForSportsFes', music_main, music_main_time, user, musicNames, musicTimes);
+        }).sendData('MusicDataForSportsFes', music_main, music_main_time, user, musicNames, musicTimes, musicFadeInStr, musicFadeOutStr);
     }
 
 
