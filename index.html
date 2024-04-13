@@ -603,7 +603,7 @@
                         document.getElementById("gmail").value = "";
                         document.getElementById("name").value = "";
 
-                        google.script.run.withSuccessHandler(function() {
+                        google.script.run.withSuccessHandler(function(response) {
                             setTimeout(showMessage("checkTextErrorMsg", "checkTextError", response.msg + "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力フォームに指示を入力してください。"),10)
                             document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
                             closeModal('checkText');
@@ -622,7 +622,7 @@
                         document.getElementById("gmail").value = "";
                         document.getElementById("name").value = "";
 
-                        google.script.run.withSuccessHandler(function() {
+                        google.script.run.withSuccessHandler(function(response) {
                             setTimeout(showMessage("checkTextErrorMsg", "checkTextError", response.mag + "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力テーブルに指示を入力してください。"),10)
                             document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
                             closeModal('checkText');
