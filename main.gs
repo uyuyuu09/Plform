@@ -32,12 +32,15 @@ function doGet(e) {
 
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const member = ss.getSheetByName("名簿");
+    const KBC_DB = ss.getSheetByName("部内名簿");
     try {
         var user_name = member.getRange(findRow(member,loginUserGmail,3),2).getValue();
         var class_num = member.getRange(findRow(member,loginUserGmail,3),1).getValue();
+        var department = KBC_DB.getRange(findRow(KBC_DB,loginUserGmail,5),3).getValue();
     } catch {
         var user_name = "ゲストさん";
         var class_num = "9999"
+        var department = "外部";
     }
     
     const adminSheet = ss.getSheetByName("admin");
@@ -49,6 +52,7 @@ function doGet(e) {
     temp.gmail = loginUserGmail;
     temp.user = user_name;
     temp.class_num = class_num;
+    temp.department = department;
     temp.eventName = eventName;
     temp.deadLine = deadLine;
 
