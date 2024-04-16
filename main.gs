@@ -133,13 +133,13 @@ function getData() {
                     let eventName = adminSheet.getRange("C7").getValue();
                     let deadLine = adminSheet.getRange("C8").getValue();
                     let dbInfo = db_sheet.getDataRange().getValues().slice(1);
-                    let msg = "HTTPレスポンス : 200 OK<br />"
+                    let msg = "HTTPステータス : 200 OK<br />"
                     return {msg, eventName, deadLine, dbInfo}
                 } else {
                     let eventName = "";
                     let deadLine = "";
                     let dbInfo = "";
-                    let msg = "HTTPレスポンス : 401 Unauthorized<br />"
+                    let msg = "HTTPステータス : 401 Unauthorized<br />"
                     return {msg, eventName, deadLine, dbInfo}
                 }
     }
@@ -170,10 +170,10 @@ function sendData() {
                         fadeOutRange.setValue(arguments[7][i]);
                     }
 
-                    let msg = "HTTPレスポンス : 200 OK<br />送信されました。ページを閉じていただいて構いません。いつでも指示情報を変更することはできますが、期日は守ってください。<br /><br />"
+                    let msg = "HTTPステータス : 200 OK<br />送信されました。ページを閉じていただいて構いません。いつでも指示情報を変更することはできますが、期日は守ってください。<br /><br />"
                     return msg;
                 } catch {
-                    let msg = "HTTPレスポンス : 400 Bad Request<br />エラーが発生しました。もう一度お試しください。";
+                    let msg = "HTTPステータス : 400 Bad Request<br />エラーが発生しました。もう一度お試しください。";
                     return msg;
                 }
 
@@ -190,7 +190,7 @@ function sendData() {
                         ss.getSheetByName(classSheetName).getRange("G5").setValue(arguments[3]);
                         db_sheet.appendRow([arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]]);
 
-                        let msg = "HTTPレスポンス : 200 OK<br />"
+                        let msg = "HTTPステータス : 200 OK<br />"
                         return {msg, classSheetName};
 
                     } catch {
@@ -204,7 +204,7 @@ function sendData() {
                         for(let j = 0; j < ifErrorSheetsDel.length; j++) {
                             ss.deleteSheet(ifErrorSheetsDel[j]);
                         }
-                        let msg = "HTTPレスポンス : 406 Not Acceptable<br />その団体名はすでに登録されています。";
+                        let msg = "HTTPステータス : 406 Not Acceptable<br />その団体名はすでに登録されています。";
                         return {msg, classSheetName};
                     }
                 } else {
@@ -219,7 +219,7 @@ function sendData() {
                         ss.getSheetByName(classSheetName).getRange("G5").setValue(arguments[3]);
                         db_sheet.appendRow([arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]]);
 
-                        let msg = "HTTPレスポンス : 200 OK<br />"
+                        let msg = "HTTPステータス : 200 OK<br />"
                         return {msg, classData, classSheetName};
                     } catch {
                         let classData = "error";
@@ -233,7 +233,7 @@ function sendData() {
                         for(let j = 0; j < ifErrorSheetsDel.length; j++) {
                             ss.deleteSheet(ifErrorSheetsDel[j]);
                         }
-                        let msg = "HTTPレスポンス : 409 Conflict<br />その団体名はすでに登録されています。"
+                        let msg = "HTTPステータス : 409 Conflict<br />その団体名はすでに登録されています。"
                         return {msg, classData, classSheetName};
                     }
                 }
@@ -241,13 +241,32 @@ function sendData() {
         case 'AdminOperation':
                 try {
                     adminSheet.getRange("C7").setValue(arguments[1]);
-                    adminSheet.getRange("C8").serValue(arguments[2]);
-                    let msg = "HTTPレスポンス : 200 OK<br />";
+                    adminSheet.getRange("C8").setValue(arguments[2]);
+                    db_sheet.getDataRange().setValue("");
+                    db_sheet.appendRow(["行事名", "団体名", "アドレス", "学籍番号", "氏名"])
+
+                    arguments[3].forEach(row => {
+                        db_sheet.appendRow(row);
+                    });
+
+                    let msg = "HTTPステータス : 200 OK<br />";
                     return msg;
                 } catch {
-                    let msg = "HTTPレスポンス : 202 Accepted<br />";
+                    let msg = "HTTPステータス : 202 Accepted<br />";
                     return msg;
                 }
+
+        case 'addClass':
+                try {
+                    let eventName = adminSheet.getRange("C7").getValue();
+                    db_sheet.appendRow([eventName, arguments[1], arguments[2], arguments[3], arguments[4]])
+                    let msg = "HTTPステータス : 200 OK<br />";
+                    return msg;
+                } catch {
+                    let msg = "HTTPステータス : 202 Accepted<br />"
+                    return msg;
+                }
+            
 
         case 'Gmail':
                 let header = `<strong>こんにちは、${arguments[3]}さん。</strong><br /><hr /><br /><br />`;

@@ -102,9 +102,15 @@
 
         <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
-                        <a class="navbar-item" href="<?= url ?>">
+                        <a class="navbar-item" id="reload">
                                 <div class="is-size-2" style="font-family: 'Noto Sans JP', sans-serif;">Plform</div>
                         </a>
+                        <div class="navbar-burger burger" data-target="navbarMenu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <input id="baseURL" value="<?= url ?>" hidden>
                 </div>
         </nav>
 
@@ -119,7 +125,7 @@
         <div id="form" class="mt-4 field control card" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
                 <section>
                     <div class="my-2 is-size-4-tablet is-size-5-mobile has-text-centered card-header card-header-title is-centered">
-                        <strong><?= eventName ?><br />大宮北高校放送部 指示情報送信フォーム</strong><br />
+                        <strong>大宮北高校放送部 指示情報送信フォーム</strong><br />
                     </div>
 
                     <br/>
@@ -277,7 +283,7 @@
                                 <button class="m-1 button is-info" onclick="closeModal('endEditModal');">
                                     編集を続ける
                                 </button>
-                                <a class="m-1 button is-danger" href="<?= url ?>">
+                                <a class="m-1 button is-danger" id="reload">
                                     終了
                                 </a>
                             </div>
@@ -302,7 +308,7 @@
                     
                     <section>
                         <div class="my-2 is-size-4-tablet is-size-5-mobile has-text-centered card-header card-header-title is-centered">
-                            <strong><?= eventName ?><br />音源関連指示情報フォーム</strong><br />
+                            <strong>音源関連指示情報フォーム</strong><br />
                         </div>
 
                         <br/>
@@ -574,7 +580,15 @@
                         
         </section>
         <!--- End section for Sports Festival  --->
-        
+
+        <section>
+            <div class="card card-content content has-text-centered is-size-4" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
+                <a target="_blank" style="color:inherit; font-family: 'Noto Sans JP', sans-serif;" id="admin">
+                    admin
+                </a>
+            </div>
+        </section>
+
         <br />
 
         <section>
@@ -591,7 +605,17 @@
 </body>
 </html>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
 <script>
+    url = document.getElementById("baseURL").value;
+    document.getElementById("reload").href = url;
+    document.getElementById("admin").href = url + "/admin?page=error";
+
     document.addEventListener("DOMContentLoaded", function () {
         showLoadingOverlay();
         startLoadingAnimation();
@@ -607,7 +631,7 @@
     function startLoadingAnimation() {
         const loadingText = document.getElementById("loadingText");
         const loadingAnimation = document.getElementById("loadingAnimation");
-        const text = "接続中...";
+        const text = "接続中";
 
         function updateText() {
             loadingAnimation.textContent = text
@@ -701,8 +725,8 @@
                         document.getElementById("gmail").value = "";
                         document.getElementById("name").value = "";
 
-                        google.script.run.withSuccessHandler(function(response) {
-                            setTimeout(showMessage("checkTextErrorMsg", "checkTextError", response.msg + "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力フォームに指示を入力してください。"),10)
+                        google.script.run.withSuccessHandler(function() {
+                            setTimeout(showMessage("checkTextErrorMsg", "checkTextError", "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力フォームに指示を入力してください。"),10)
                             document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
                             closeModal('checkText');
                         }).sendData('Gmail', "団が登録されました", gmail, name, "団名: " + class_name + "\n\n代表者メールアドレス: " + gmail +"\n\n代表者学籍番号: " + num + "\n\n代表者氏名: " + name)
@@ -714,14 +738,12 @@
                         showMessage("checkTextErrorMsg", "checkTextError", response.msg + "改善しない場合は放送部に連絡をしてください。")
                     } else {
                         showTable(response.classData, response.classSheetName);
-
                         document.getElementById("class_name").value = "";
                         document.getElementById("num").value = "";
                         document.getElementById("gmail").value = "";
                         document.getElementById("name").value = "";
-
-                        google.script.run.withSuccessHandler(function(response) {
-                            setTimeout(showMessage("checkTextErrorMsg", "checkTextError", response.mag + "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力テーブルに指示を入力してください。"),10)
+                        google.script.run.withSuccessHandler(function() {
+                            setTimeout(showMessage("checkTextErrorMsg", "checkTextError", "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力テーブルに指示を入力してください。"),10)
                             document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
                             closeModal('checkText');
                         }).sendData('Gmail', "団体が登録されました", gmail, name, "団体名: " + class_name + "\n\n代表者メールアドレス: " + gmail +"\n\n代表者学籍番号: " + num + "\n\n代表者氏名: " + name);
