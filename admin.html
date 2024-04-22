@@ -167,7 +167,7 @@
                         <br />
 
                         <label class="label">指示書提出期限</label>
-                        <input class="input" id="deadLine" type="text" placeholder="提出期限を入力(20XX/mm/yy)">
+                        <input class="input" id="deadLine" type="text" placeholder="提出期限を入力(20XX/mm/dd)">
 
                         <br />
                         <hr />
@@ -309,9 +309,9 @@
         document.getElementById("loading-msg").textContent = "ページを表示する準備をしています..."
 
         let message = '';
-        if (3 < currentHour && currentHour < 9) {
+        if(3 < currentHour && currentHour < 9) {
             message = 'おはようございます。';
-        } else if (currentHour < 18) {
+        } else if(currentHour < 18) {
             message = 'こんにちは。';
         } else {
             message = 'こんばんは。';
@@ -382,7 +382,7 @@
                 container.appendChild(document.createElement("br"));
                 container.appendChild(document.createElement("br"));
 
-                if (columnHeaders[columnIndex] === "代表者氏名") {
+                if(columnHeaders[columnIndex] === "代表者氏名") {
                     const hr = document.createElement("hr");
                     container.appendChild(hr);
                 }
@@ -414,12 +414,12 @@
         let rowIndex = 0;
         let columnIndex = 0;
         inputs.forEach(input => {
-            if (columnIndex === 0) {
+            if(columnIndex === 0) {
                 new_dbInfo[rowIndex] = [];
             }
             new_dbInfo[rowIndex][columnIndex] = input.value;
             columnIndex++;
-            if (columnIndex >= 5) {
+            if(columnIndex >= 5) {
                 columnIndex = 0;
                 rowIndex++;
             }
@@ -445,7 +445,7 @@
         let row = [];
         inputs.forEach((input, index) => {
             row.push(input.value);
-            if ((index + 1) % 5 === 0 || index === inputs.length - 1) {
+            if((index + 1) % 5 === 0 || index === inputs.length - 1) {
                 new_dbInfo.push(row);
                 row = [];
             }
@@ -464,12 +464,18 @@
         let address = document.getElementById("new_address").value;
         let num = document.getElementById("new_num").value;
         let name = document.getElementById("new_name").value;
-
-        google.script.run.withSuccessHandler(function(msg) {
+        
+        if(className === "" || address === "" || num === "" || name === "") {
             document.getElementById("sendDataAddBtn").classList.remove("is-loading");
             closeModal("addClassModal");
-            showMessage("msg", "msgModal", msg);
-        }).sendData("addClass", className, address, num, name);
+            showMessage("msg", "msgModal", "空白の欄があります。すべて入力してから送信してください。");
+        } else {
+            google.script.run.withSuccessHandler(function(msg) {
+                document.getElementById("sendDataAddBtn").classList.remove("is-loading");
+                closeModal("addClassModal");
+                showMessage("msg", "msgModal", msg);
+            }).sendData("addClass", className, address, num, name);
+        }
     }
 
 </script>

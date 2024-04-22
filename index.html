@@ -85,7 +85,7 @@
 
         <!--- start Loading Animation  --->
         <div class="loading-overlay" id="loadingOverlay">
-            <div class="pl-1 is-size-1 is-size-3-mobile has-text-centered" style="font-family: 'Noto Sans JP', sans-serif; color: #004aad"id="loadingText">
+            <div class="pl-1 is-size-1 is-size-3-mobile has-text-centered" style="font-family: 'Noto Sans JP', sans-serif; color: #004aad" id="loadingText">
                 <span id="loadingAnimation"></span><br />
                 <span id="loading-msg" class="is-size-4 is-size-7-mobile"></span>
 
@@ -102,15 +102,10 @@
 
         <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
-                        <a class="navbar-item" id="reload">
-                                <div class="is-size-2" style="font-family: 'Noto Sans JP', sans-serif;">Plform</div>
-                        </a>
-                        <div class="navbar-burger burger" data-target="navbarMenu">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <input id="baseURL" value="<?= url ?>" hidden>
+                    <a class="navbar-item" id="reload">
+                        <div class="is-size-2" style="font-family: 'Noto Sans JP', sans-serif;">Plform</div>
+                    </a>
+                    <input id="baseURL" value="<?= url ?>" hidden>
                 </div>
         </nav>
 
@@ -252,20 +247,98 @@
         </div>
 
         <section id="editThingsNotForSportsFes">
-            <div class="table-container m-6">
-                <strong>
-                    <div id="classSheetName" class="is-size-4 is-size-6-mobile"></div>
-                </strong>
+            <strong>
+                <div id="classSheetName" class="is-size-4 is-size-6-mobile ml-2 mt-3"></div>
+            </strong>
+
+            <div class="table-container m-1">
                 <div class="m-3" id="editDataThings" style="width:95vw; min-width:700px; margin-right:auto; margin-left:auto;"></div>
             </div>
-
+            
             <br />
+            <br />
+            
+            <div id="form" class="mt-4 field control card" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
+                    
+                <section>
+                    <div class="my-2 is-size-4-tablet is-size-5-mobile has-text-centered card-header card-header-title is-centered">
+                        <strong>その他の指示情報</strong><br />
+                    </div>
 
-            <section>
-                <button id="endEditTable" class="btn-blue" style="zoom:130%" onclick="endEditTable()">
-                    編集を終了する
-                </button>
-            </section>
+                    <br/>
+                    <br/>
+
+                    <div class="mx-2 pt-0 card-content">
+
+                        <label class="label">有線マイクの本数</label>
+                        <input class="input" id="mic_Cab" type="number" placeholder="例)3">
+                        
+                        <br />
+                        <br />
+
+                        <label class="label">無線マイクの本数</label>
+                        <input class="input" id="mic_WL" type="number" placeholder="例)3">
+
+                        <br />
+                        <br />
+
+                        <label class="label">小さいマイクスタンドの数</label>
+                        <input class="input" id="micStand_Mini" type="number" placeholder="例)3">
+
+                        <br />
+                        <br />
+
+                        <label class="label">大きいマイクスタンドの数</label>
+                        <input class="input" id="micStand_Big" type="number" placeholder="例)3">
+
+                        <br />
+                        <br />
+
+                        <label class="label">スポットライト使用</label>
+                        <div class="select is-rounded">
+                            <select id="spot">
+                                <option>下手側・上手側使用</option>
+                                <option>下手側のみ使用</option>
+                                <option>上手側のみ使用</option>
+                                <option>なし</option>
+                            </select>
+                        </div>
+
+                        <br />
+                        <br />
+
+                        <label class="label">ステージ照明使用</label>
+                        <div class="select is-rounded">
+                            <select id="light">
+                                <option>あり</option>
+                                <option>なし</option>
+                            </select>
+                        </div>
+
+                        <br />
+                        <br />
+
+                        <label class="label">プロジェクター使用</label>
+                        <div class="select is-rounded">
+                            <select id="projector">
+                                <option>あり</option>
+                                <option>なし</option>
+                            </select>
+                        </div>
+
+                        <br />
+                        <br />
+
+                        <section>
+                            <button class="btn-blue" style="zoom:130%" onclick="checkFormNotForSportsFes()">
+                                編集を終了する
+                            </button>
+                        </section>
+
+                    </div>
+                </section>
+
+            </div>
 
             <!--- modal for end-editing table --->
             <section>
@@ -274,17 +347,36 @@
                     <div class="modal-content">
                         <div class="box">
                             <div class="message is-info">
-                                <div class="message-body">
-                                    指示情報の編集を終了しますか？終了ボタンを押すとページを再読み込みします。<br />
-                                    いつでも指示情報を変更することはできますが、期日は守ってください。
+                                <div class="message-body" id="endEditMsg">
                                 </div>
                             </div>
                             <div>
-                                <button class="m-1 button is-info" onclick="closeModal('endEditModal');">
-                                    編集を続ける
+                                <button id="submitDataNotForSportsFesButton" class="m-1 button is-info" onclick="submitDataNotForSportsFes(user)">
+                                    送信
                                 </button>
-                                <a class="m-1 button is-danger" id="reload">
-                                    終了
+                                <a class="m-1 button is-danger" onclick='closeModal("endEditModal")'>
+                                    戻る
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--- end end-editing modal --->
+
+            <!--- modal for show alert table --->
+            <section>
+                <div id="alertModal" class="modal">
+                    <div class="modal-background"></div>
+                    <div class="modal-content">
+                        <div class="box">
+                            <div class="message is-info">
+                                <div class="message-body" id="alertMsg">
+                                </div>
+                            </div>
+                            <div>
+                                <a class="m-1 button is-danger" onclick='closeModal("alertModal")'>
+                                    戻る
                                 </a>
                             </div>
                         </div>
@@ -501,6 +593,19 @@
 
                                 <label class="label">フェードアウト箇所</label>
                                 <input class="input" id="music_7_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">備考</label>
+                                <textarea class="textarea" placeholder="音源に関する備考があれば記入してください" rows="3" id="remarks"></textarea>
+                                
+                                <hr />
+                                <br />
+
+                                <div class="has-text-centered">
+                                    提出していただく音源ファイルは<strong>1つ</strong>ですが、音量調整を円滑に行うために音源中に含まれる曲についても回答してください。
+                                </div>
                         </div>
 
                         <section>
@@ -521,7 +626,7 @@
                                             <div class="message-body" id="checkMusicErrorMsg"></div>
                                         </div>
                                         <div>
-                                            <button class="m-1 button is-info" id="submitMusicDataForSportsFesButton" onclick="submitMusicDataForSportsFes(<?= user ?>)">
+                                            <button class="m-1 button is-info" id="submitMusicDataForSportsFesButton" onclick="submitMusicDataForSportsFes(user)">
                                                 送信
                                             </button>
                                             <button class="m-1 button is-danger" onclick="closeModal('checkMusicError')">
@@ -581,14 +686,6 @@
         </section>
         <!--- End section for Sports Festival  --->
 
-        <section>
-            <div class="card card-content content has-text-centered is-size-4" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
-                <a target="_blank" style="color:inherit; font-family: 'Noto Sans JP', sans-serif;" id="admin">
-                    admin
-                </a>
-            </div>
-        </section>
-
         <br />
 
         <section>
@@ -599,6 +696,21 @@
                 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br /><br />
 
                 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                <hr />
+                <section>
+                    <div class="has-text-centered is-size-5" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto; align-items: center;">
+                        <a target="_blank" style="color:inherit;" id="admin">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fa-solid fa-user"></i>
+                                </span>
+                                <span>
+                                  管理者ページ
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+                </section>
             </div>
         </section>
     </section>
@@ -612,16 +724,18 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <script>
+    user = <?= user ?>;
+    deadLine = <?= deadLine ?>;
     url = document.getElementById("baseURL").value;
     document.getElementById("reload").href = url;
-    document.getElementById("admin").href = url + "/admin?page=error";
+    document.getElementById("admin").href = url + "/admin?";
 
     document.addEventListener("DOMContentLoaded", function () {
         showLoadingOverlay();
         startLoadingAnimation();
 
         document.getElementById("gmail").value = <?= gmail ?>;
-        document.getElementById("name").value = <?= user ?>;
+        document.getElementById("name").value = user;
         document.getElementById("num").value = <?= class_num ?>;
         document.getElementById("editThingsNotForSportsFes").style.display = 'none';
         document.getElementById("formForSportsFes").style.display = 'none';
@@ -686,7 +800,7 @@
         let num = document.getElementById("num").value;
         let name = document.getElementById("name").value;
 
-        document.getElementById("modalMsg").innerHTML = "<div>団体名：" + class_name + "</div><br /><div>代表者メールアドレス：" + gmail + "</div><br /><div>代表者学籍番号：" +num + "</div><br />" + "<div>代表者氏名：" + name + "</div><br /><p>以上の入力内容を送信してもよろしいですか？<br /><br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div>";
+        document.getElementById("modalMsg").innerHTML = "<div>団体名：" + class_name + "</div><br /><div>代表者メールアドレス：" + gmail + "</div><br /><div>代表者学籍番号：" +num + "</div><br />" + "<div>代表者氏名：" + name + "</div><br /><p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>";
         activeModal("checkText");
     }
 
@@ -762,7 +876,6 @@
     function searchClass() {
         document.getElementById("searchBtn").classList.add("is-loading");
 
-        var user = <?= user ?>;
         var eventName = <?= eventName ?>;
 
         google.script.run.withSuccessHandler(function(found) {
@@ -890,6 +1003,7 @@
 
         let music_main = document.getElementById("music_main").value;
         let music_main_time = document.getElementById("music_main_time").value;
+        let remarks = document.getElementById("remarks").value;
 
         for (let i = 1; i <= 7; i++) {
             let musicName = document.getElementById(`music_${i}`).value;
@@ -904,13 +1018,43 @@
 
         google.script.run.withSuccessHandler(function(msg) {
             document.getElementById("submitMusicDataForSportsFesButton").classList.remove("is-loading");
-            showMessage("showMusicMsg", "showMusicMsgModal", msg + "<div class='is-size-5'>期日: <?= deadLine ?></div>");
+            showMessage("showMusicMsg", "showMusicMsgModal", msg + `<div class='is-size-5'>期日: ${deadLine}</div>`);
             closeModal('checkMusicError');
-        }).sendData('MusicDataForSportsFes', music_main, music_main_time, user, musicNames, musicTimes, musicFadeInStr, musicFadeOutStr);
+        }).sendData('MusicDataForSportsFes', music_main, music_main_time, user, musicNames, musicTimes, musicFadeInStr, musicFadeOutStr, remarks);
     }
 
-    function endEditTable() {
-        activeModal('endEditModal');
+    function checkFormNotForSportsFes() {
+        let mic_Cab = document.getElementById("mic_Cab").value;
+        let mic_WL = document.getElementById("mic_WL").value;
+        let micStand_Mini = document.getElementById("micStand_Mini").value;
+        let micStand_Big = document.getElementById("micStand_Big").value;
+        let spot = document.getElementById("spot").value;
+        let light = document.getElementById("light").value;
+        let projector = document.getElementById("projector").value;
+
+        if(5 <= mic_Cab || 4 <= mic_WL) {
+            showMessage("alertMsg", "alertModal", "マイクの本数が上限を超えています。1団体あたり、<br />有線マイクの上限 : 4本<br />無線マイクの上限 : 3本<br />までです。");
+        } else {
+            showMessage("endEditMsg", "endEditModal", `有線マイク : ${mic_Cab}本<br /><br  />無線マイク : ${mic_WL}本<br /><br  />小さいマイクスタンド : ${micStand_Mini}台<br /><br  />大きいマイクスタンド : ${micStand_Big}台<br /><br  />スポットライト : ${spot}<br /><br  />ステージ照明使用 : ${light}<br /><br  />プロジェクター使用 : ${projector}<br /><br /><p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>`)
+        }
+    }
+
+    function submitDataNotForSportsFes(user) {
+        document.getElementById("submitDataNotForSportsFesButton").classList.add("is-loading");
+
+        let mic_Cab = document.getElementById("mic_Cab").value;
+        let mic_WL = document.getElementById("mic_WL").value;
+        let micStand_Mini = document.getElementById("micStand_Mini").value;
+        let micStand_Big = document.getElementById("micStand_Big").value;
+        let spot = document.getElementById("spot").value;
+        let light = document.getElementById("light").value;
+        let projector = document.getElementById("projector").value;
+
+        google.script.run.withSuccessHandler(function(msg) {
+            document.getElementById("submitDataNotForSportsFesButton").classList.remove("is-loading");
+            showMessage("alertMsg", "alertModal", msg + `<div class='is-size-5'>期日: ${deadLine}</div>`);
+            closeModal('endEditModal');
+        }).sendData('dataForOtherEvents', user, mic_Cab, mic_WL, micStand_Mini, micStand_Big, spot, light, projector);
     }
 
 </script>

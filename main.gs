@@ -9,6 +9,24 @@ function findRow(sheet, val, col){
     return 0;
 }
 
+function findMultiRow(sheet, val, col) {
+    var dat = sheet.getDataRange().getValues(); //受け取ったシートのデータを二次元配列に取得
+    var targetRows = [];
+    var data = [];
+    for (var i = 0; i < dat.length; i++) {
+        if (dat[i][col - 1] == val) {
+            targetRows.push(i + 1);
+        }
+    }
+    targetRows = Array.from(new Set(targetRows));
+    for (let i = 0; i < targetRows.length; i++) {
+        // 検索にヒットしたレコードの取得
+        let tmpdata = sheet.getRange(targetRows[i], 1, 1, sheet.getLastColumn()).getValues();
+        data.push(tmpdata[0]);
+    }
+    return data;
+}
+
 function doGet(e) {
     var page = e.pathInfo ? e.pathInfo : "index";
 
@@ -124,7 +142,16 @@ function getData() {
                 } else {
                     let classSheetName = class_name + ".指示情報";
                     let classData = ss.getSheetByName(classSheetName).getRange("A8:H27").getValues();
-                    return {classData, classSheetName};
+                    let mic_Cab = ss.getSheetByName(classSheetName).getRange("E34").getValue();
+                    let mic_WL = ss.getSheetByName(classSheetName).getRange("E36").getValue();
+                    let micStand_Mini = ss.getSheetByName(classSheetName).getRange("E38").getValue();
+                    let micStand_Big = ss.getSheetByName(classSheetName).getRange("E40").getValue();
+                    let spot_left = ss.getSheetByName(classSheetName).getRange("C42").getValue();
+                    let spot_right = ss.getSheetByName(classSheetName).getRange("E44").getValue();
+                    let light = ss.getSheetByName(classSheetName).getRange("C46").getValue();
+                    let projector = ss.getSheetByName(classSheetName).getRange("C48").getValue();
+
+                    return {classData, classSheetName, mic_Cab, mic_WL, micStand_Mini, micStand_Big, spot_left, spot_right, light, projector};
                 }
         case 'AdminInfomation':
                 let AdminLoginId = adminSheet.getRange("C9").getValue();
@@ -158,6 +185,7 @@ function sendData() {
 
                     sheet.getRange("A17").setValue(arguments[1]);
                     sheet.getRange("E17").setValue(arguments[2]);
+                    sheet.getRange("H17").setValue(arguments[8]);
 
                     for(let i = 0; i < arguments[4].length && i < arguments[5].length && i < arguments[6].length && i < arguments[7].length; i++) {
                         let nameRange = sheet.getRange(i + 8, 2);
@@ -177,22 +205,75 @@ function sendData() {
                     return msg;
                 }
 
+        case 'dataForOtherEvents':
+                try {
+                    let class_name = db_sheet.getRange(findRow(db_sheet,arguments[1],5),2).getValue();
+                    let classSheetName = class_name + ".指示情報";
+                    let sheet = ss.getSheetByName(classSheetName);
+
+                    if(arguments[2] === "" && arguments[3] === "") {
+                        sheet.getRange("C34").setValue("なし");
+                        sheet.getRange("C38").setValue("なし");
+                    } else {
+                        sheet.getRange("C34").setValue("あり");
+                        sheet.getRange("C38").setValue("あり");
+                        sheet.getRange("E34").setValue(arguments[2]);
+                        sheet.getRange("E36").setValue(arguments[3]);
+                        sheet.getRange("E38").setValue(arguments[4]);
+                        sheet.getRange("E40").setValue(arguments[5]);
+                    }
+
+                    if(arguments[6].includes("使用")) {
+                        sheet.getRange("C42").setValue("あり");
+                        switch(arguments[6]) {
+                            case "下手側・上手側使用":
+                                    sheet.getRange("E42").setValue("あり");
+                                    sheet.getRange("E44").setValue("あり");
+                                    break;
+                            case "下手側のみ使用":
+                                    sheet.getRange("E42").setValue("あり");
+                                    sheet.getRange("E44").setValue("なし");
+                                    break;
+                            case "上手側のみ使用":
+                                    sheet.getRange("E42").setValue("なし");
+                                    sheet.getRange("E44").setValue("あり");
+                                    break;
+                        }
+                    } else {
+                        sheet.getRange("C42").setValue("なし");
+                    }
+                    
+                    sheet.getRange("C46").setValue(arguments[7]);
+                    sheet.getRange("C48").setValue(arguments[8]);
+                    
+                    let msg = "HTTPステータス : 200 OK<br />送信されました。ページを閉じていただいて構いません。いつでも指示情報を変更することはできますが、期日は守ってください。<br /><br />";
+                    return msg;
+                } catch {
+
+                }
+
         case 'classData':
                 let ifErrorSheetsDel = [];
+                judge = findMultiRow(db_sheet, arguments[5], 5);
                 if(arguments[1].includes("体育祭")) {
                     try {
-                        const baseSheet = ss.getSheetByName("S_F-db");
-                        baseSheet.copyTo(ss).setName(arguments[2] + ".指示情報(体育祭)");
+                        if(judge.length === 0) {
+                            const baseSheet = ss.getSheetByName("S_F-db");
+                            baseSheet.copyTo(ss).setName(arguments[2] + ".指示情報(体育祭)");
 
-                        let classSheetName = arguments[2] + ".指示情報(体育祭)";
-                        ss.getSheetByName(classSheetName).getRange("B4").setValue(arguments[2]);
-                        ss.getSheetByName(classSheetName).getRange("G4").setValue(arguments[4] + " " + arguments[5]);
-                        ss.getSheetByName(classSheetName).getRange("G5").setValue(arguments[3]);
-                        db_sheet.appendRow([arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]]);
+                            let classSheetName = arguments[2] + ".指示情報(体育祭)";
+                            ss.getSheetByName(classSheetName).getRange("B4").setValue(arguments[2]);
+                            ss.getSheetByName(classSheetName).getRange("G4").setValue(arguments[4] + " " + arguments[5]);
+                            ss.getSheetByName(classSheetName).getRange("G5").setValue(arguments[3]);
+                            db_sheet.appendRow([arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]]);
 
-                        let msg = "HTTPステータス : 200 OK<br />"
-                        return {msg, classSheetName};
-
+                            let msg = "HTTPステータス : 200 OK<br />"
+                            return {msg, classSheetName};
+                        } else {
+                            let classSheetName = "error";
+                            let msg = "HTTPステータス : 406 Not Acceptable<br />あなたの氏名はすでに登録されています。";
+                            return {msg, classSheetName};
+                        }
                     } catch {
                         let classSheetName = "error";
                         let sheets = ss.getSheets();
@@ -209,18 +290,24 @@ function sendData() {
                     }
                 } else {
                     try {
-                        const baseSheet = ss.getSheetByName("db");
-                        baseSheet.copyTo(ss).setName(arguments[2] + ".指示情報");
+                        if(judge.length === 0) {
+                            const baseSheet = ss.getSheetByName("db");
+                            baseSheet.copyTo(ss).setName(arguments[2] + ".指示情報");
 
-                        let classSheetName = arguments[2] + ".指示情報";
-                        let classData = ss.getSheetByName(classSheetName).getRange("A8:H27").getValues();
-                        ss.getSheetByName(classSheetName).getRange("B4").setValue(arguments[2]);
-                        ss.getSheetByName(classSheetName).getRange("G4").setValue(arguments[4] + " " + arguments[5]);
-                        ss.getSheetByName(classSheetName).getRange("G5").setValue(arguments[3]);
-                        db_sheet.appendRow([arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]]);
+                            let classSheetName = arguments[2] + ".指示情報";
+                            let classData = ss.getSheetByName(classSheetName).getRange("A8:H27").getValues();
+                            ss.getSheetByName(classSheetName).getRange("B4").setValue(arguments[2]);
+                            ss.getSheetByName(classSheetName).getRange("G4").setValue(arguments[4] + " " + arguments[5]);
+                            ss.getSheetByName(classSheetName).getRange("G5").setValue(arguments[3]);
+                            db_sheet.appendRow([arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]]);
 
-                        let msg = "HTTPステータス : 200 OK<br />"
-                        return {msg, classData, classSheetName};
+                            let msg = "HTTPステータス : 200 OK<br />"
+                            return {msg, classData, classSheetName};
+                        } else {
+                            let classSheetName = "error";
+                            let msg = "HTTPステータス : 406 Not Acceptable<br />あなたの氏名はすでに登録されています。";
+                            return {msg, classSheetName};
+                        }
                     } catch {
                         let classData = "error";
                         let classSheetName = "error";
@@ -252,18 +339,24 @@ function sendData() {
                     let msg = "HTTPステータス : 200 OK<br />";
                     return msg;
                 } catch {
-                    let msg = "HTTPステータス : 202 Accepted<br />";
+                    let msg = "HTTPステータス : 202 Accepted<br />送信されましたが、エラーが発生しました。<br />";
                     return msg;
                 }
 
         case 'addClass':
+                judge = findMultiRow(db_sheet, arguments[1], 2)
                 try {
-                    let eventName = adminSheet.getRange("C7").getValue();
-                    db_sheet.appendRow([eventName, arguments[1], arguments[2], arguments[3], arguments[4]])
-                    let msg = "HTTPステータス : 200 OK<br />";
-                    return msg;
+                    if(judge.length === 0) {
+                        let eventName = adminSheet.getRange("C7").getValue();
+                        db_sheet.appendRow([eventName, arguments[1], arguments[2], arguments[3], arguments[4]])
+                        let msg = "HTTPステータス : 200 OK<br />";
+                        return msg;
+                    } else {
+                        let msg = "HTTPステータス : 406 Not Acceptable<br />その団体名はすでに登録されています。";
+                        return msg;
+                    }
                 } catch {
-                    let msg = "HTTPステータス : 202 Accepted<br />"
+                    let msg = "HTTPステータス : 202 Accepted<br />送信されましたが、エラーが発生しました。<br />";
                     return msg;
                 }
             
@@ -278,5 +371,8 @@ function sendData() {
                                         });
                 draft.send();
                 return;
+
+        case 'inquiry':
+                let 
     }
 }
