@@ -10,7 +10,7 @@ function findRow(sheet, val, col){
 }
 
 function findMultiRow(sheet, val, col) {
-    var dat = sheet.getDataRange().getValues(); //受け取ったシートのデータを二次元配列に取得
+    var dat = sheet.getDataRange().getValues();
     var targetRows = [];
     var data = [];
     for (var i = 0; i < dat.length; i++) {
@@ -50,15 +50,15 @@ function doGet(e) {
 
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const member = ss.getSheetByName("名簿");
-    const KBC_DB = ss.getSheetByName("部内名簿");
+    // const KBC_DB = ss.getSheetByName("部内名簿");
     try {
         var user_name = member.getRange(findRow(member,loginUserGmail,3),2).getValue();
         var class_num = member.getRange(findRow(member,loginUserGmail,3),1).getValue();
-        var department = KBC_DB.getRange(findRow(KBC_DB,loginUserGmail,5),3).getValue();
+        // var department = KBC_DB.getRange(findRow(KBC_DB,loginUserGmail,5),3).getValue();
     } catch {
         var user_name = "ゲストさん";
         var class_num = "9999"
-        var department = "外部";
+        // var department = "外部";
     }
     
     const adminSheet = ss.getSheetByName("admin");
@@ -70,7 +70,7 @@ function doGet(e) {
     temp.gmail = loginUserGmail;
     temp.user = user_name;
     temp.class_num = class_num;
-    temp.department = department;
+    // temp.department = department;
     temp.eventName = eventName;
     temp.deadLine = deadLine;
 
@@ -132,12 +132,12 @@ function getData() {
 
                 if(arguments[2].includes("体育祭")) {
                     let classSheetName = class_name + ".指示情報(体育祭)";
-                    let mainMusicData = ss.getSheetByName(classSheetName).getRange("A17").getValue();
-                    let mainMusicTimeData = ss.getSheetByName(classSheetName).getRange("E17").getValue();
-                    let classMusicNameData = ss.getSheetByName(classSheetName).getRange("B8:B14").getValues();
-                    let classMusicTimeData = ss.getSheetByName(classSheetName).getRange("F8:F14").getValues();
-                    let musicFadeInData = ss.getSheetByName(classSheetName).getRange("H8:H14").getValues();
-                    let musicFadeOutData = ss.getSheetByName(classSheetName).getRange("I8:I14").getValues();
+                    let mainMusicData = ss.getSheetByName(classSheetName).getRange("A20").getValue();
+                    let mainMusicTimeData = ss.getSheetByName(classSheetName).getRange("E20").getValue();
+                    let classMusicNameData = ss.getSheetByName(classSheetName).getRange("B8:B17").getValues();
+                    let classMusicTimeData = ss.getSheetByName(classSheetName).getRange("F8:F17").getValues();
+                    let musicFadeInData = ss.getSheetByName(classSheetName).getRange("H8:H17").getValues();
+                    let musicFadeOutData = ss.getSheetByName(classSheetName).getRange("I8:I17").getValues();
                     return {mainMusicData, mainMusicTimeData, classMusicNameData, classMusicTimeData, classSheetName, musicFadeInData, musicFadeOutData};
                 } else {
                     let classSheetName = class_name + ".指示情報";
@@ -183,9 +183,9 @@ function sendData() {
                     let classSheetName = class_name + ".指示情報(体育祭)";
                     let sheet = ss.getSheetByName(classSheetName);
 
-                    sheet.getRange("A17").setValue(arguments[1]);
-                    sheet.getRange("E17").setValue(arguments[2]);
-                    sheet.getRange("H17").setValue(arguments[8]);
+                    sheet.getRange("A20").setValue(arguments[1]);
+                    sheet.getRange("E20").setValue(arguments[2]);
+                    sheet.getRange("H20").setValue(arguments[8]);
 
                     for(let i = 0; i < arguments[4].length && i < arguments[5].length && i < arguments[6].length && i < arguments[7].length; i++) {
                         let nameRange = sheet.getRange(i + 8, 2);
@@ -214,6 +214,10 @@ function sendData() {
                     if(arguments[2] === "" && arguments[3] === "") {
                         sheet.getRange("C34").setValue("なし");
                         sheet.getRange("C38").setValue("なし");
+                        sheet.getRange("E34").setValue("なし");
+                        sheet.getRange("E36").setValue("なし");
+                        sheet.getRange("E38").setValue("なし");
+                        sheet.getRange("E40").setValue("なし");
                     } else {
                         sheet.getRange("C34").setValue("あり");
                         sheet.getRange("C38").setValue("あり");
@@ -241,15 +245,26 @@ function sendData() {
                         }
                     } else {
                         sheet.getRange("C42").setValue("なし");
+                        sheet.getRange("E42").setValue("なし");
+                        sheet.getRange("E44").setValue("なし");
                     }
                     
                     sheet.getRange("C46").setValue(arguments[7]);
                     sheet.getRange("C48").setValue(arguments[8]);
-                    
+                    sheet.getRange("G34").setValue(arguments[9]);
+
+                    for(let i = 0; i < arguments[10].length && i < arguments[11].length; i++) {
+                        let nameRange = sheet.getRange(i + 55, 2);
+                        let timeRange = sheet.getRange(i + 55, 4);
+                        nameRange.setValue(arguments[10][i]);
+                        timeRange.setValue(arguments[11][i]);
+                    }
+
                     let msg = "HTTPステータス : 200 OK<br />送信されました。ページを閉じていただいて構いません。いつでも指示情報を変更することはできますが、期日は守ってください。<br /><br />";
                     return msg;
                 } catch {
-
+                    let msg = "HTTPステータス : 400 Bad Request<br />エラーが発生しました。もう一度お試しください。";
+                    return msg;
                 }
 
         case 'classData':
@@ -371,8 +386,5 @@ function sendData() {
                                         });
                 draft.send();
                 return;
-
-        case 'inquiry':
-                let 
     }
 }

@@ -329,16 +329,63 @@
                         <br />
                         <br />
 
-                        <section>
-                            <button class="btn-blue" style="zoom:130%" onclick="checkFormNotForSportsFes()">
-                                編集を終了する
-                            </button>
-                        </section>
+                        <label class="label is-size-5">音源No.1</label>
+                        <input class="input" id="music_1_event" type="text" placeholder="曲名を記入">
+
+                        <br />
+                        <br />
+
+                        <label class="label">秒数</label>
+                        <input class="input" id="time_1_event" type="text" placeholder="例)2分05秒">
+
+                        <br />
+                        <br />
+
+                        <label class="label is-size-5">音源No.2</label>
+                        <input class="input" id="music_2_event" type="text" placeholder="曲名を記入">
+
+                        <br />
+                        <br />
+
+                        <label class="label">秒数</label>
+                        <input class="input" id="time_2_event" type="text" placeholder="例)2分05秒">
+
+                        <br />
+                        <br />
+
+                        <label class="label is-size-5">音源No.3</label>
+                        <input class="input" id="music_3_event" type="text" placeholder="曲名を記入">
+
+                        <br />
+                        <br />
+
+                        <label class="label">秒数</label>
+                        <input class="input" id="time_3_event" type="text" placeholder="例)2分05秒">
+
+                        <br />
+                        <br />
+
+                        <label class="label">備考</label>
+                        <textarea class="textarea" placeholder="音源に関する備考があれば記入してください" rows="3" id="remarksForEvents"></textarea>
+                                
+                        <hr />
+                        <br />
+
+                        <div class="has-text-centered">
+                            入力事項は以上です。
+                        </div>
 
                     </div>
-                </section>
+                    <section>
+                        <button class="btn-blue" style="zoom:130%" onclick="checkFormNotForSportsFes()">
+                            編集を終了する
+                        </button>
+                    </section>
 
-            </div>
+                    <br />
+
+                </div>
+            </section>
 
             <!--- modal for end-editing table --->
             <section>
@@ -375,7 +422,7 @@
                                 </div>
                             </div>
                             <div>
-                                <a class="m-1 button is-danger" onclick='closeModal("alertModal")'>
+                                <a class="m-1 button is-danger" onclick='closeModal("alertModal"); closeModal("endEditModal")'>
                                     戻る
                                 </a>
                             </div>
@@ -597,14 +644,86 @@
                                 <br />
                                 <br />
 
+                                <label class="label is-size-5">音源No.8</label>
+                                <input class="input" id="music_8" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_8_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_8_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_8_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label is-size-5">音源No.9</label>
+                                <input class="input" id="music_9" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_9_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_9_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_9_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label is-size-5">音源No.10</label>
+                                <input class="input" id="music_10" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_10_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_10_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_10_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
                                 <label class="label">備考</label>
-                                <textarea class="textarea" placeholder="音源に関する備考があれば記入してください" rows="3" id="remarks"></textarea>
+                                <textarea class="textarea" placeholder="音源に関する備考があれば記入してください" rows="3" id="remarksForMusic"></textarea>
                                 
                                 <hr />
                                 <br />
 
                                 <div class="has-text-centered">
-                                    提出していただく音源ファイルは<strong>1つ</strong>ですが、音量調整を円滑に行うために音源中に含まれる曲についても回答してください。
+                                    入力事項は以上です。「確認」ボタンを押してください。
                                 </div>
                         </div>
 
@@ -823,6 +942,9 @@
         if(class_name === "" || gmail === "" || num === "" || name === "") {
             document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
             showMessage("checkTextErrorMsg", "checkTextError", "入力していない項目があるようです。「戻る」を押して、漏れなく入力してください。")
+        } else if(!name.includes(" ")) {
+            document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
+            showMessage("checkTextErrorMsg", "checkTextError", "姓と名の間に半角空白を挟んでください。")
         } else {
             google.script.run.withSuccessHandler(function(response) {
 
@@ -966,7 +1088,7 @@
         let music_main_time = document.getElementById("music_main_time").value;
         let message = `以下の音源内容を送信します。<br /><br />音源ファイル名: ${music_main}<br />音源全体の秒数: ${music_main_time}<br /><br />`;
 
-        for(let i = 1; i <= 7; i++) {
+        for(let i = 1; i <= 10; i++) {
             let musicName = document.getElementById(`music_${i}`).value;
             let musicTime = document.getElementById(`music_${i}_time`).value;
             let musicFadeIn = document.getElementById(`music_${i}_fadeIn`).value;
@@ -986,7 +1108,7 @@
 
         if(musicCount > 0) {
             for(let i = 0; i < musicNames.length; i++) {
-                message += `音源No.${i + 1}: ${musicNames[i]}<br />秒数: ${musicTimes[i]}<br />フェードイン: ${musicFadeInStr[i]}<br />フェードアウト: ${musicFadeOutStr[i]}<br /><br />`;
+                message += `音源No.${i + 1}: ${musicNames[i]}<br />秒数   : ${musicTimes[i]}<br />フェードイン: ${musicFadeInStr[i]}<br />フェードアウト: ${musicFadeOutStr[i]}<br /><br />`;
             }
         }
 
@@ -1003,9 +1125,9 @@
 
         let music_main = document.getElementById("music_main").value;
         let music_main_time = document.getElementById("music_main_time").value;
-        let remarks = document.getElementById("remarks").value;
+        let remarksForMusic = document.getElementById("remarksForMusic").value;
 
-        for (let i = 1; i <= 7; i++) {
+        for (let i = 1; i <= 10; i++) {
             let musicName = document.getElementById(`music_${i}`).value;
             let musicTime = document.getElementById(`music_${i}_time`).value;
             let musicFadeIn = document.getElementById(`music_${i}_fadeIn`).value;
@@ -1020,7 +1142,7 @@
             document.getElementById("submitMusicDataForSportsFesButton").classList.remove("is-loading");
             showMessage("showMusicMsg", "showMusicMsgModal", msg + `<div class='is-size-5'>期日: ${deadLine}</div>`);
             closeModal('checkMusicError');
-        }).sendData('MusicDataForSportsFes', music_main, music_main_time, user, musicNames, musicTimes, musicFadeInStr, musicFadeOutStr, remarks);
+        }).sendData('MusicDataForSportsFes', music_main, music_main_time, user, musicNames, musicTimes, musicFadeInStr, musicFadeOutStr, remarksForMusic);
     }
 
     function checkFormNotForSportsFes() {
@@ -1032,10 +1154,34 @@
         let light = document.getElementById("light").value;
         let projector = document.getElementById("projector").value;
 
+        let musicCount = 0;
+        let musicNames = [];
+        let musicTimes = [];
+        let message = ``;
+
+        for (let i = 1; i <= 3; i++) {
+            let musicName = document.getElementById(`music_${i}_event`).value;
+            let musicTime = document.getElementById(`time_${i}_event`).value;
+            if(musicName && musicTime) {
+                musicCount++;
+                musicNames.push(musicName);
+                musicTimes.push(musicTime);
+            } else if(musicName !== "" && musicTime === "" || musicName === "" && musicTime !== "") {
+                showMessage("alertMsg", "alertModal", "音源名と秒数はセットで入力してください。");
+                break;
+            }
+        }
+
+        if(musicCount > 0) {
+            for(let i = 0; i < musicNames.length; i++) {
+                message += `音源No.${i + 1}: ${musicNames[i]}<br />秒数: ${musicTimes[i]}<br /><br />`;
+            }
+        }
+
         if(5 <= mic_Cab || 4 <= mic_WL) {
             showMessage("alertMsg", "alertModal", "マイクの本数が上限を超えています。1団体あたり、<br />有線マイクの上限 : 4本<br />無線マイクの上限 : 3本<br />までです。");
         } else {
-            showMessage("endEditMsg", "endEditModal", `有線マイク : ${mic_Cab}本<br /><br  />無線マイク : ${mic_WL}本<br /><br  />小さいマイクスタンド : ${micStand_Mini}台<br /><br  />大きいマイクスタンド : ${micStand_Big}台<br /><br  />スポットライト : ${spot}<br /><br  />ステージ照明使用 : ${light}<br /><br  />プロジェクター使用 : ${projector}<br /><br /><p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>`)
+            showMessage("endEditMsg", "endEditModal", `有線マイク : ${mic_Cab}本<br /><br  />無線マイク : ${mic_WL}本<br /><br  />小さいマイクスタンド : ${micStand_Mini}台<br /><br  />大きいマイクスタンド : ${micStand_Big}台<br /><br  />スポットライト : ${spot}<br /><br  />ステージ照明使用 : ${light}<br /><br  />プロジェクター使用 : ${projector}<br /><br />` + message + `<p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>`)
         }
     }
 
@@ -1049,12 +1195,24 @@
         let spot = document.getElementById("spot").value;
         let light = document.getElementById("light").value;
         let projector = document.getElementById("projector").value;
+        let remarksForEvents = document.getElementById("remarksForEvents").value;
+
+        let musicCount = 0;
+        let musicNames = [];
+        let musicTimes = [];
+
+        for (let i = 1; i <= 3; i++) {
+            let musicName = document.getElementById(`music_${i}_event`).value;
+            let musicTime = document.getElementById(`time_${i}_event`).value;
+            musicNames.push(musicName);
+            musicTimes.push(musicTime);
+        }
 
         google.script.run.withSuccessHandler(function(msg) {
             document.getElementById("submitDataNotForSportsFesButton").classList.remove("is-loading");
             showMessage("alertMsg", "alertModal", msg + `<div class='is-size-5'>期日: ${deadLine}</div>`);
             closeModal('endEditModal');
-        }).sendData('dataForOtherEvents', user, mic_Cab, mic_WL, micStand_Mini, micStand_Big, spot, light, projector);
+        }).sendData('dataForOtherEvents', user, mic_Cab, mic_WL, micStand_Mini, micStand_Big, spot, light, projector, remarksForEvents, musicNames, musicTimes);
     }
 
 </script>
