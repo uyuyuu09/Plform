@@ -1012,6 +1012,7 @@
                         document.getElementById("searchBtn").classList.remove("is-loading");
                         document.getElementById("music_main").value = response.mainMusicData;
                         document.getElementById("music_main_time").value = response.mainMusicTimeData;
+                        document.getElementById("remarksForMusic").innerHTML = response.remarksForMusic;
                         for(let i = 0; i < response.classMusicNameData.length; i++) {
 
                             document.getElementById(`music_${i + 1}`).value = response.classMusicNameData[i];
@@ -1032,7 +1033,41 @@
                     showMessage("searchErrorMsg", "searchErrorModal", "あなたが代表者となっている団体の指示情報入力テーブルを表示します。「戻る」を押してください。");
                     google.script.run.withSuccessHandler(function(response) {
                         document.getElementById("searchBtn").classList.remove("is-loading");
-                        showTable(response.classData, response.classSheetName);
+                        setTimeout(function() {
+                            showTable(response.classData, response.classSheetName);
+
+                            document.getElementById("mic_Cab").value = response.mic_Cab;
+                            document.getElementById("mic_WL").value = response.mic_WL;
+                            document.getElementById("micStand_Mini").value = response.micStand_Mini;
+                            document.getElementById("micStand_Big").value = response.micStand_Big;
+
+                            if(response.spot_left === "あり" && response.spot_right === "あり") {
+                                document.getElementById("spot").options[0].selected = true;
+                            } else if(response.spot_left === "あり") {
+                                document.getElementById("spot").options[1].selected = true;
+                            } else if(response.spot_right === "あり") {
+                                document.getElementById("spot").options[2].selected = true;
+                            }
+                            
+                            if(response.light === "あり") {
+                                document.getElementById("light").options[0].selected = true;
+                            } else {
+                                document.getElementById("light").options[1].selected = true;
+                            }
+                            
+                            if(response.projector === "あり") {
+                                document.getElementById("projector").options[0].selected = true;
+                            } else {
+                                document.getElementById("projector").options[1].selected = true;
+                            }
+
+                            document.getElementById("remarksForEvents").value = response.remarksForEvents;
+
+                            for(let i = 0; i < response.musicNameData.length; i++) {
+                                document.getElementById(`music_${i + 1}_event`).value = response.musicNameData[i];
+                                document.getElementById(`time_${i + 1}_event`).value = response.musicTimeData[i];
+                            }
+                        }, 1000);
                     }).getData('classData_classSheetName', user, eventName);
                 }
             }
@@ -1153,6 +1188,7 @@
         let spot = document.getElementById("spot").value;
         let light = document.getElementById("light").value;
         let projector = document.getElementById("projector").value;
+        let remarksForEvents = document.getElementById("remarksForEvents").value;
 
         let musicCount = 0;
         let musicNames = [];
@@ -1181,7 +1217,7 @@
         if(5 <= mic_Cab || 4 <= mic_WL) {
             showMessage("alertMsg", "alertModal", "マイクの本数が上限を超えています。1団体あたり、<br />有線マイクの上限 : 4本<br />無線マイクの上限 : 3本<br />までです。");
         } else {
-            showMessage("endEditMsg", "endEditModal", `有線マイク : ${mic_Cab}本<br /><br  />無線マイク : ${mic_WL}本<br /><br  />小さいマイクスタンド : ${micStand_Mini}台<br /><br  />大きいマイクスタンド : ${micStand_Big}台<br /><br  />スポットライト : ${spot}<br /><br  />ステージ照明使用 : ${light}<br /><br  />プロジェクター使用 : ${projector}<br /><br />` + message + `<p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>`)
+            showMessage("endEditMsg", "endEditModal", `有線マイク : ${mic_Cab}本<br /><br  />無線マイク : ${mic_WL}本<br /><br  />小さいマイクスタンド : ${micStand_Mini}台<br /><br  />大きいマイクスタンド : ${micStand_Big}台<br /><br  />スポットライト : ${spot}<br /><br  />ステージ照明使用 : ${light}<br /><br  />プロジェクター使用 : ${projector}<br /><br />備考 : ${remarksForEvents}<br /><br />` + message + `<p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>`)
         }
     }
 

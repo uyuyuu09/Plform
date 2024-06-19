@@ -132,33 +132,65 @@ function getData() {
 
                 if(arguments[2].includes("体育祭")) {
                     let classSheetName = class_name + ".指示情報(体育祭)";
-                    let mainMusicData = ss.getSheetByName(classSheetName).getRange("A20").getValue();
-                    let mainMusicTimeData = ss.getSheetByName(classSheetName).getRange("E20").getValue();
-                    let classMusicNameData = ss.getSheetByName(classSheetName).getRange("B8:B17").getValues();
-                    let classMusicTimeData = ss.getSheetByName(classSheetName).getRange("F8:F17").getValues();
-                    let musicFadeInData = ss.getSheetByName(classSheetName).getRange("H8:H17").getValues();
-                    let musicFadeOutData = ss.getSheetByName(classSheetName).getRange("I8:I17").getValues();
-                    return {mainMusicData, mainMusicTimeData, classMusicNameData, classMusicTimeData, classSheetName, musicFadeInData, musicFadeOutData};
+                    // let mainMusicData = ss.getSheetByName(classSheetName).getRange("A20").getValue();
+                    // let mainMusicTimeData = ss.getSheetByName(classSheetName).getRange("E20").getValue();
+                    // let classMusicNameData = ss.getSheetByName(classSheetName).getRange("B8:B17").getValues();
+                    // let classMusicTimeData = ss.getSheetByName(classSheetName).getRange("F8:F17").getValues();
+                    // let musicFadeInData = ss.getSheetByName(classSheetName).getRange("H8:H17").getValues();
+                    // let musicFadeOutData = ss.getSheetByName(classSheetName).getRange("I8:I17").getValues();
+                    // let remarksForMusic = ss.getSheetByName(classSheetName).getRange("H20").getValue();
+
+                    //After
+                    let classSheet = ss.getSheetByName(classSheetName);
+                    let data = classSheet.getDataRange().getValues();
+                    let mainMusicData = data[19][0];
+                    let mainMusicTimeData = data[19][4];
+                    let remarksForMusic = data[19][7];
+                    let classMusicNameData = classSheet.getRange("B8:B17").getValues();
+                    let classMusicTimeData = classSheet.getRange("F8:F17").getValues();
+                    let musicFadeInData = classSheet.getRange("H8:H17").getValues();
+                    let musicFadeOutData = classSheet.getRange("I8:I17").getValues();
+
+                    return {mainMusicData, mainMusicTimeData, classMusicNameData, classMusicTimeData, classSheetName, musicFadeInData, musicFadeOutData, remarksForMusic};
                 } else {
                     let classSheetName = class_name + ".指示情報";
-                    let classData = ss.getSheetByName(classSheetName).getRange("A8:H27").getValues();
-                    let mic_Cab = ss.getSheetByName(classSheetName).getRange("E34").getValue();
-                    let mic_WL = ss.getSheetByName(classSheetName).getRange("E36").getValue();
-                    let micStand_Mini = ss.getSheetByName(classSheetName).getRange("E38").getValue();
-                    let micStand_Big = ss.getSheetByName(classSheetName).getRange("E40").getValue();
-                    let spot_left = ss.getSheetByName(classSheetName).getRange("C42").getValue();
-                    let spot_right = ss.getSheetByName(classSheetName).getRange("E44").getValue();
-                    let light = ss.getSheetByName(classSheetName).getRange("C46").getValue();
-                    let projector = ss.getSheetByName(classSheetName).getRange("C48").getValue();
+                    // let classData = ss.getSheetByName(classSheetName).getRange("A8:H27").getValues();
+                    // let mic_Cab = ss.getSheetByName(classSheetName).getRange("E34").getValue();
+                    // let mic_WL = ss.getSheetByName(classSheetName).getRange("E36").getValue();
+                    // let micStand_Mini = ss.getSheetByName(classSheetName).getRange("E38").getValue();
+                    // let micStand_Big = ss.getSheetByName(classSheetName).getRange("E40").getValue();
+                    // let spot_left = ss.getSheetByName(classSheetName).getRange("E42").getValue();
+                    // let spot_right = ss.getSheetByName(classSheetName).getRange("E44").getValue();
+                    // let light = ss.getSheetByName(classSheetName).getRange("C46").getValue();
+                    // let projector = ss.getSheetByName(classSheetName).getRange("C48").getValue();
+                    // let remarksForEvents = ss.getSheetByName(classSheetName).getRange("G34").getValue();
 
-                    return {classData, classSheetName, mic_Cab, mic_WL, micStand_Mini, micStand_Big, spot_left, spot_right, light, projector};
+                    //After
+                    let classSheet = ss.getSheetByName(classSheetName);
+                    let classData = classSheet.getRange("A8:H27").getValues();
+                    let data = classSheet.getRange("A34:G60").getValues();
+                    let mic_Cab = data[0][4];
+                    let mic_WL = data[2][4];
+                    let micStand_Mini = data[4][4];
+                    let micStand_Big = data[6][4];
+                    let spot_left = data[8][4];
+                    let spot_right = data[10][4];
+                    let light = data[12][2];
+                    let projector = data[14][2];
+                    let remarksForEvents = data[0][6];
+
+                    let musicNameData = classSheet.getRange("B55:B57").getValues();
+                    let musicTimeData = classSheet.getRange("D55:D57").getValues();
+
+                    return {classData, classSheetName, mic_Cab, mic_WL, micStand_Mini, micStand_Big, spot_left, spot_right, light, projector, musicNameData, musicTimeData, remarksForEvents};
                 }
         case 'AdminInfomation':
                 let AdminLoginId = adminSheet.getRange("C9").getValue();
                 
                 if(arguments[1] === AdminLoginId) {
-                    let eventName = adminSheet.getRange("C7").getValue();
-                    let deadLine = adminSheet.getRange("C8").getValue();
+                    let data = adminSheet.getRange("C7:C8").getValues();
+                    let eventName = data[0][0];
+                    let deadLine = data[1][0];
                     let dbInfo = db_sheet.getDataRange().getValues().slice(1);
                     let msg = "HTTPステータス : 200 OK<br />"
                     return {msg, eventName, deadLine, dbInfo}
@@ -254,8 +286,8 @@ function sendData() {
                     sheet.getRange("G34").setValue(arguments[9]);
 
                     for(let i = 0; i < arguments[10].length && i < arguments[11].length; i++) {
-                        let nameRange = sheet.getRange(i + 55, 2);
-                        let timeRange = sheet.getRange(i + 55, 4);
+                        let nameRange = sheet.getRange(i + 54, 2);
+                        let timeRange = sheet.getRange(i + 54, 4);
                         nameRange.setValue(arguments[10][i]);
                         timeRange.setValue(arguments[11][i]);
                     }
