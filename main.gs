@@ -165,7 +165,7 @@ function getData() {
                     let spot_right = data[10][4];
                     let light = data[12][2];
                     let projector = data[14][2];
-                    let remarksForEvents = data[6][6];
+                    let remarksForEvents = data[21][6];
 
                     let musicNameData = classSheet.getRange("B55:B57").getValues();
                     let musicTimeData = classSheet.getRange("D55:D57").getValues();
