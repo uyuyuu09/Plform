@@ -348,7 +348,7 @@
                 document.getElementById("edit").style.display = "";
                 document.getElementById("eventName").value = response.eventName;
                 document.getElementById("deadLine").value = response.deadLine;
-                console.log(response.dbInfo);
+                console.log(response.sheetNames);
                 addDbInfoInputs(response.dbInfo);
             } else {
                 showMessage("showMsg", "showMsgModal", response.msg + "認証に失敗しました。");

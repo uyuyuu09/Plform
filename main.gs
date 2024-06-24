@@ -180,8 +180,12 @@ function getData() {
                     let eventName = data[0][0];
                     let deadLine = data[1][0];
                     let dbInfo = db_sheet.getDataRange().getValues().slice(1);
+                    let names = ss.getSheets().map(function(sheet) {
+                      return sheet.getName();
+                    });
+                    let sheetNames = names.join(",");
                     let msg = "HTTPステータス : 200 OK<br />"
-                    return {msg, eventName, deadLine, dbInfo}
+                    return {msg, eventName, deadLine, dbInfo, sheetNames}
                 } else {
                     let eventName = "";
                     let deadLine = "";
@@ -274,8 +278,8 @@ function sendData() {
                     sheet.getRange("G55").setValue(arguments[9]);
 
                     for(let i = 0; i < arguments[10].length && i < arguments[11].length; i++) {
-                        let nameRange = sheet.getRange(i + 54, 2);
-                        let timeRange = sheet.getRange(i + 54, 4);
+                        let nameRange = sheet.getRange(i + 55, 2);
+                        let timeRange = sheet.getRange(i + 55, 4);
                         nameRange.setValue(arguments[10][i]);
                         timeRange.setValue(arguments[11][i]);
                     }
@@ -326,7 +330,7 @@ function sendData() {
                 } else {
                     try {
                         if(judge.length === 0) {
-                            const baseSheet = ss.getSheetByName("db");
+                            const baseSheet = ss.getSheetByName("temp");
                             baseSheet.copyTo(ss).setName(arguments[2] + ".指示情報");
 
                             let classSheetName = arguments[2] + ".指示情報";
@@ -395,7 +399,6 @@ function sendData() {
                     return msg;
                 }
             
-
         case 'Gmail':
                 let header = `<strong>こんにちは、${arguments[3]}さん。</strong><br /><hr /><br /><br />`;
                 let body = `<font size="4">${arguments[4]}</font><br />`;
