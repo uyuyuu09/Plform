@@ -411,3 +411,25 @@ function sendData() {
                 return;
     }
 }
+
+function deleteDoneSheets() {;
+    let ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheets = ss.getSheets();
+    let deleteSheets = [];
+
+    for(let i = 0; i < sheets.length; i++) {
+        if(sheets[i].getName().includes("指示情報")) {
+            deleteSheets.push(sheets[i])
+        } else {
+            //指示情報シート以外は除外
+        }
+    }
+
+    for(let j = 0; j < deleteSheets.length; j++) {
+        ss.deleteSheet(deleteSheets[j])
+    }
+
+    let sheet = ss.getSheetByName("団体情報記録");
+    sheet.getDataRange().setValue("");
+    sheet.appendRow(["行事名", "団体名", "アドレス",	"学籍番号",	"氏名"])
+}
