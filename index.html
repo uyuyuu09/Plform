@@ -1,749 +1,1254 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top">
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    >
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    >
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    >
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap"
-      rel="stylesheet"
-    >
-    <link
-      href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"
-      rel="stylesheet"
-    >
-  </head>
-  <style>
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #fff;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
+<head>
+        <base target="_top">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap" rel="stylesheet">
+        <link href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style>
+                .loading-overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: #fff;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                }
 
-    @keyframes fadeInOut {
-      0% {
-        opacity: 0;
-      }
-      25% {
-        opacity: 1;
-      }
-      75% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
+                @keyframes fadeInOut {
+                    0% {
+                        opacity: 0;
+                    }
+                    25% {
+                        opacity: 1;
+                    }
+                    75% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0;
+                    }
+                }
 
-    #loadingAnimation {
-      animation: fadeInOut 1500ms infinite;
-      white-space: pre-line;
-    }
+                #loadingAnimation {
+                    animation: fadeInOut 1500ms infinite;
+                    white-space: pre-line;
+                }
 
-    .noselect {
-      user-select: none;
-      -webkit-user-select: none;
-    }
+                .sticky-col {
+                        position: sticky;
+                        left: 0;
+                        z-index: 20;
+                        background-color: white;
+                }
 
-    #aria {
-      flex: 1;
-      overflow-y: auto;
-    }
-    
-    .table_fixed {
-      table-layout: fixed;
-    }
+                .btn-blue {
+                        background: #1e90ff;
+                        border-radius: 50px;
+                        position: relative;
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+                        margin: 0 auto;
+                        width: auto;
+                        max-width: 260px;
+                        min-width: 150px;
+                        padding: 10px 25px;
+                        color: #FFF;
+                        transition: 0.3s ease-in-out;
+                        font-weight: 500;
+                        border-radius: 20;
+                        zoom: 110%;
+                        border: none;
+                }
 
-    .btn-b {
-      background: rgb(85, 85, 255);
-      border-radius: 50px;
-      position: relative;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin: 0 auto;
-      width: 30vw;
-      max-width: 260px;
-      padding: 10px 25px;
-      color: #FFF;
-      transition: 0.3s ease-in-out;
-      font-weight: 500;
-      border-radius: 20;
-      zoom: 110%;
-      border:none;
-    }
+                .btn-blue:hover {
+                        background: #ffffff;
+                        color: black;
+                }
 
-    .input_msg {
-      margin-left: auto;
-      margin-right: auto;
-    }
+                .noselect {
+                    user-select: none;
+                    -webkit-user-select: none;
+                }
+        </style>
+</head>
+<body>
+    <section class="noselect" id="body">
 
-    .card {
-      margin-right: auto;
-      margin-left: auto;
-    }
+        <!--- start Loading Animation  --->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="pl-1 is-size-1 is-size-3-mobile has-text-centered" style="font-family: 'Noto Sans JP', sans-serif; color: #004aad" id="loadingText">
+                <span id="loadingAnimation"></span><br />
+                <span id="loading-msg" class="is-size-4 is-size-7-mobile"></span>
 
-    .clocks {
-      margin-right: auto;
-      margin-left: auto;
-    }
+                <br />
+                <hr />
 
-    #qrcode-container img {
-      width: 45vw;
-      height: auto;
-      max-width: 500px;
-    }
-  </style>
-  <header class="noselect">
-    <div
-      class="loading-overlay"
-      id="loadingOverlay"
-    >
-      <div
-        class="pl-1 is-size-1 is-size-3-mobile has-text-centered"
-        style="font-family: 'Noto Sans JP', sans-serif; color: #004aad"
-        id="loadingText"
-      >
-        <span id="loadingAnimation"></span><br />
-        <span class="is-size-4 is-size-7-mobile">このウェブアプリはMITライセンスにより保護されています</span>
-      </div>
-    </div>
+                <div class="is-size-5 is-size-7-mobile">
+                    システムの都合上、このウェブサイトへのアクセスは<br />
+                    各団体の代表者にお願いしています。
+                </div>
+            </div>
+        </div>
+        <!--- end Loading Animation  --->
 
-    <? if(department == "onkyou" || department == "sode" || department == "spot" || department == "tyoukou" || department == "advisor" || department == "admin" || department == "photo"){ ?>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" id="reload">
+                        <div class="is-size-2" style="font-family: 'Noto Sans JP', sans-serif;">Plform</div>
+                    </a>
+                    <input id="baseURL" value="<?= url ?>" hidden>
+                </div>
+        </nav>
 
-    <nav
-      class="navbar"
-      role="navigation"
-      aria-label="main navigation"
-      id="nav"
-    >
-      <div class="navbar-brand">
-        <a
-          id="logo"
-          class="navbar-item is-size-1 is-size-3-mobile pt-1 pr-6"
-          style="font-family: 'Noto Sans JP', sans-serif; color: #004aad"
-          href="<?= url ?>"
-        >SIRIUS
-        </a>
-          <div
-            class="navbar-burger burger"
-            data-target="navbarMenu"
-            id="burger"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-      </div>
-      <div
-        class="navbar-end navbar-menu"
-        id="navbarMenu"
-      >
-        <a
-          class="navbar-item "
-          style="font-family: 'Montserrat', sans-serif; color: #778899"
-          onclick="activateTab('topPage')"
-        >
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fas fa-home"></i>
-            </span>
-            <span>
-              TOP
-            </span>
-          </span>
-        </a>
+        <div class="notification is-white p-4">
 
-        <? if(department !== 'photo') {?>
+            <div class="has-text-centered is-size-4 is-size-6-mobile" style="font-family: 'Noto Sans JP', sans-serif;" id="talkClock"></div>
 
-        <a
-          class="navbar-item "
-          style="font-family: 'Montserrat', sans-serif; color: #778899"
-          onclick="activateTab('instruction')"
-        >指示書一覧
-        </a>
+            <div class="has-text-centered is-size-4 is-size-6-mobile" style="font-family: 'Noto Sans JP', sans-serif;" id="user_name"></div>
 
-        <? } ?>
+        </div>
 
-        <div class="navbar-item has-dropdown is-hoverable noselect">
-          <a
-            class="navbar-link noselect"
-            style="font-family: 'Montserrat', sans-serif; color: #778899"
-          >北コレ
-          </a>
-          <div class="navbar-dropdown">
-            <a
-              class="navbar-item"
-              onclick="activateTab('kita_kore')"
-              style="font-family: 'Montserrat', sans-serif; color: #778899"
-            >スプレッドシート
-            </a>
+        <div id="form" class="mt-4 field control card" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
+                <section>
+                    <div class="my-2 is-size-4-tablet is-size-5-mobile has-text-centered card-header card-header-title is-centered">
+                        <strong>大宮北高校放送部 指示情報送信フォーム</strong><br />
+                    </div>
+
+                    <br/>
+                    <br/>
+
+                    <div class="mx-2 pt-0 card-content">
+
+                        <label class="label">団体名</label>
+                        <input class="input" id="class_name" type="text" placeholder="正式な団体名を入力">
+
+                        <br />
+                        <br />
+
+                        <label class="label">代表者メールアドレス(学校用アカウント)</label>
+                        <input class="input" id="gmail" type="text" placeholder="半角で入力">
+
+                        <br />
+                        <br />
+
+                        <label class="label">代表者学籍番号(半角数字で入力)</label>
+                        <input class="input" id="num" type="number" placeholder="半角数字で入力" max="3900" min="1100">
+
+                        <br />
+                        <br />
+
+                        <label class="label">代表者氏名</label>
+                        <input class="input" id="name" type="text" placeholder="氏名を入力(姓と名の間は半角空白で開ける)">
+
+                        <br />
+                        <br />
+
+                        <button class="is-size-6 btn-blue" onclick="sendThingsModal()">
+                            確認
+                        </button>
+
+                        <!--- modal for checking inputed-text --->
+                        <section>
+                            <div id="checkText" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="modalMsg"></div>
+                                        </div>
+                                        <div>
+                                            <button id="sendCheckedTextsBtn" class="m-1 button is-info" onclick="callsendClassData()">
+                                                送信
+                                            </button>
+                                            <button class="m-1 button is-danger" onclick="closeModal('checkText')">
+                                                入力やりなおし
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end checking inputed-text modal -->
+
+                        <br />
+
+                        <hr>
+
+                        <div class="has-text-centered is-size-6">
+                            <strong>すでに上記の内容を送信しており、指示情報を編集したい方はこちら</strong>
+                        </div>
+
+                        <br />
+
+                        <button id="searchBtn" class="button is-size-6 btn-blue" onclick="searchClass()">
+                            指示情報を編集する
+                        </button>
+
+                        <!--- modal for serching class -->
+                        <section>
+                            <div id="searchErrorModal" class="modal">
+                                <div class="modal-background"></div>
+                                    <div class="modal-content">
+                                        <div class="box">
+                                            <div class="message is-info">
+                                                <div class="message-body" id="searchErrorMsg"></div>
+                                            </div>
+                                            <div>
+                                                <button class="m-1 button is-danger" onclick="closeModal('searchErrorModal')">
+                                                    戻る
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </section>  
+                        <!--- end serching modal -->   
+
+                        <!--- modal for console error --->
+                        <section>
+                            <div id="checkTextError" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="checkTextErrorMsg"></div>
+                                        </div>
+                                        <div>
+                                            <button class="m-1 button is-danger" onclick="closeModal('checkTextError'); closeModal('checkText')">
+                                                戻る
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end error modal --->                               
+
+                        <hr>
+                                    
+                        <br />
+
+                        <div class="notification is-white is-size-7 p-0 has-text-centered" style="font-family: 'Noto Sans JP', sans-serif;">
+                            自動で入力されるデータは、すべて放送部が所有する2024年度全学年名簿に基づいています。
+                        </div>
+
+                    </div>
+
+                </section>
+        </div>
+
+        <section id="editThingsNotForSportsFes">
+            <strong>
+                <div id="classSheetName" class="is-size-4 is-size-6-mobile ml-2 mt-3"></div>
+            </strong>
+
+            <div class="table-container m-1">
+                <div class="m-3" id="editDataThings" style="width:95vw; min-width:700px; margin-right:auto; margin-left:auto;"></div>
+            </div>
             
-            <? if(department == 'admin') {?>
-
-            <hr class="navbar-divider" />
-            <a
-              class="navbar-item"
-              onclick="activateTab('kita_kore_book')"
-              style="font-family: 'Montserrat', sans-serif; color: #778899"
-            >北コレ撮影アポ取り状況確認
-            </a>
-
-            <? } ?>
+            <br />
+            <br />
             
-          </div>
-        </div>
-        <a
-          class="navbar-item "
-          style="font-family: 'Montserrat', sans-serif; color: #778899"
-          onclick="activateTab('log')"
-        >チャット
-        </a>
-        <div class="navbar-item has-dropdown is-hoverable noselect">
-          <a
-            class="navbar-link noselect"
-            style="font-family: 'Montserrat', sans-serif; color: #778899"
-          >名簿
-          </a>
-          <div class="navbar-dropdown">
-            <a
-              class="navbar-item"
-              onclick="activateTab('club_mem')"
-              style="font-family: 'Montserrat', sans-serif; color: #778899"
-            >放送部・写真部
-            </a>
-            <hr class="navbar-divider" />
-            <a
-              class="navbar-item"
-              onclick="activateTab('dantai_mem')"
-              style="font-family: 'Montserrat', sans-serif; color: #778899"
-            >縦割り
-            </a>
-          </div>
-        </div>
+            <div id="form" class="mt-4 field control card" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
+                    
+                <section>
+                    <div class="my-2 is-size-4-tablet is-size-5-mobile has-text-centered card-header card-header-title is-centered">
+                        <strong>その他の指示情報</strong><br />
+                    </div>
 
-        <? if(department == 'admin') { ?>
+                    <br/>
+                    <br/>
 
-          <a
-            class="navbar-item "
-            style="font-family: 'Montserrat', sans-serif; color: #778899"
-            onclick="activateTab('admin')"
-          >ADMIN
-          </a>
+                    <div class="mx-2 pt-0 card-content">
 
-        <? } ?>
+                        <label class="label">有線マイクの本数</label>
+                        <input class="input" id="mic_Cab" type="number" placeholder="例)3">
+                        
+                        <br />
+                        <br />
 
-        <div
-          class="navbar-item "
-          style="font-family: 'Montserrat', sans-serif; color: #778899"
-        >
-          <?= user_name ?>(<?= department ?>)
-        </div>
-      </div>
-    </nav>
-  </header>
-  <body class="noselect"><br />
+                        <label class="label">無線マイクの本数</label>
+                        <input class="input" id="mic_WL" type="number" placeholder="例)3">
+
+                        <br />
+                        <br />
+
+                        <label class="label">小さいマイクスタンドの数</label>
+                        <input class="input" id="micStand_Mini" type="number" placeholder="例)3">
+
+                        <br />
+                        <br />
+
+                        <label class="label">大きいマイクスタンドの数</label>
+                        <input class="input" id="micStand_Big" type="number" placeholder="例)3">
+
+                        <br />
+                        <br />
+
+                        <label class="label">スポットライト使用</label>
+                        <div class="select is-rounded">
+                            <select id="spot">
+                                <option>下手側・上手側使用</option>
+                                <option>下手側のみ使用</option>
+                                <option>上手側のみ使用</option>
+                                <option>なし</option>
+                            </select>
+                        </div>
+
+                        <br />
+                        <br />
+
+                        <label class="label">ステージ照明使用</label>
+                        <div class="select is-rounded">
+                            <select id="light">
+                                <option>あり</option>
+                                <option>なし</option>
+                            </select>
+                        </div>
+
+                        <br />
+                        <br />
+
+                        <label class="label">プロジェクター使用</label>
+                        <div class="select is-rounded">
+                            <select id="projector">
+                                <option>あり</option>
+                                <option>なし</option>
+                            </select>
+                        </div>
+
+                        <br />
+                        <br />
+
+                        <label class="label is-size-5">音源No.1</label>
+                        <input class="input" id="music_1_event" type="text" placeholder="曲名を記入">
+
+                        <br />
+                        <br />
+
+                        <label class="label">秒数</label>
+                        <input class="input" id="time_1_event" type="text" placeholder="例)2分05秒">
+
+                        <br />
+                        <br />
+
+                        <label class="label is-size-5">音源No.2</label>
+                        <input class="input" id="music_2_event" type="text" placeholder="曲名を記入">
+
+                        <br />
+                        <br />
+
+                        <label class="label">秒数</label>
+                        <input class="input" id="time_2_event" type="text" placeholder="例)2分05秒">
+
+                        <br />
+                        <br />
+
+                        <label class="label is-size-5">音源No.3</label>
+                        <input class="input" id="music_3_event" type="text" placeholder="曲名を記入">
+
+                        <br />
+                        <br />
+
+                        <label class="label">秒数</label>
+                        <input class="input" id="time_3_event" type="text" placeholder="例)2分05秒">
+
+                        <br />
+                        <br />
+
+                        <label class="label">備考</label>
+                        <textarea class="textarea" placeholder="音源に関する備考があれば記入してください" rows="3" id="remarksForEvents"></textarea>
+                                
+                        <hr />
+                        <br />
+
+                        <div class="has-text-centered">
+                            入力事項は以上です。
+                        </div>
+
+                    </div>
+                    <section>
+                        <button class="btn-blue" style="zoom:130%" onclick="checkFormNotForSportsFes()">
+                            編集を終了する
+                        </button>
+                    </section>
+
+                    <br />
+
+                </div>
+            </section>
+
+            <!--- modal for end-editing table --->
+            <section>
+                <div id="endEditModal" class="modal">
+                    <div class="modal-background"></div>
+                    <div class="modal-content">
+                        <div class="box">
+                            <div class="message is-info">
+                                <div class="message-body" id="endEditMsg">
+                                </div>
+                            </div>
+                            <div>
+                                <button id="submitDataNotForSportsFesButton" class="m-1 button is-info" onclick="submitDataNotForSportsFes(user)">
+                                    送信
+                                </button>
+                                <a class="m-1 button is-danger" onclick='closeModal("endEditModal")'>
+                                    戻る
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--- end end-editing modal --->
+
+            <!--- modal for show alert table --->
+            <section>
+                <div id="alertModal" class="modal">
+                    <div class="modal-background"></div>
+                    <div class="modal-content">
+                        <div class="box">
+                            <div class="message is-info">
+                                <div class="message-body" id="alertMsg">
+                                </div>
+                            </div>
+                            <div>
+                                <a class="m-1 button is-danger" onclick='closeModal("alertModal"); closeModal("endEditModal")'>
+                                    戻る
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--- end end-editing modal --->
+
+            <br />
+
+        </section>
+
+        <!--- Start section for Sports Festival  --->
+        <section id="formForSportsFes">
+          
+                <br />
+                <hr />
+                <br />
+
+                <div id="form" class="mt-4 field control card" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
+                    
+                    <section>
+                        <div class="my-2 is-size-4-tablet is-size-5-mobile has-text-centered card-header card-header-title is-centered">
+                            <strong>音源関連指示情報フォーム</strong><br />
+                        </div>
+
+                        <br/>
+                        <br/>
+
+                        <div class="mx-2 pt-0 card-content">
+
+                                <label class="label">音源ファイル名</label>
+                                <input class="input" id="music_main" type="text" placeholder="音源ファイル名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">音源全体の秒数</label>
+                                <input class="input" id="music_main_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <hr />
+                                <br />
+
+                                <div class="has-text-centered">
+                                    提出していただく音源ファイルは<strong>1つ</strong>ですが、音量調整を円滑に行うために音源中に含まれる曲についても回答してください。<br />
+                                </div>
+
+                                <br />
+                                <hr />
+                                <br />
+
+                                <label class="label is-size-5">音源No.1</label>
+                                <input class="input" id="music_1" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_1_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_1_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_1_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <hr />
+
+                                <label class="label is-size-5">音源No.2</label>
+                                <input class="input" id="music_2" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_2_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_2_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_2_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <hr />
+
+                                <label class="label is-size-5">音源No.3</label>
+                                <input class="input" id="music_3" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_3_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_3_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_3_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <hr />
+
+                                <label class="label is-size-5">音源No.4</label>
+                                <input class="input" id="music_4" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_4_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_4_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_4_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <hr />
+
+                                <label class="label is-size-5">音源No.5</label>
+                                <input class="input" id="music_5" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_5_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_5_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_5_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <hr />
+
+                                <label class="label is-size-5">音源No.6</label>
+                                <input class="input" id="music_6" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_6_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_6_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_6_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <hr />
+
+                                <label class="label is-size-5">音源No.7</label>
+                                <input class="input" id="music_7" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_7_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_7_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_7_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label is-size-5">音源No.8</label>
+                                <input class="input" id="music_8" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_8_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_8_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_8_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label is-size-5">音源No.9</label>
+                                <input class="input" id="music_9" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_9_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_9_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_9_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label is-size-5">音源No.10</label>
+                                <input class="input" id="music_10" type="text" placeholder="曲名を記入">
+
+                                <br />
+                                <br />
+
+                                <label class="label">秒数</label>
+                                <input class="input" id="music_10_time" type="text" placeholder="例)2分05秒">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードイン箇所</label>
+                                <input class="input" id="music_10_fadeIn" type="text" placeholder="フェードインする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">フェードアウト箇所</label>
+                                <input class="input" id="music_10_fadeOut" type="text" placeholder="フェードアウトする箇所の秒数">
+
+                                <br />
+                                <br />
+
+                                <label class="label">備考</label>
+                                <textarea class="textarea" placeholder="音源に関する備考があれば記入してください" rows="3" id="remarksForMusic"></textarea>
+                                
+                                <hr />
+                                <br />
+
+                                <div class="has-text-centered">
+                                    入力事項は以上です。「確認」ボタンを押してください。
+                                </div>
+                        </div>
+
+                        <section>
+                            <button class="btn-blue" onclick="checkFormForSportsFes()">
+                                確認
+                            </button>
+                        </section>
+
+                        <br />
+
+                        <!--- modal for checking inputed-text and times -->
+                        <section>
+                            <div id="checkMusicError" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="checkMusicErrorMsg"></div>
+                                        </div>
+                                        <div>
+                                            <button class="m-1 button is-info" id="submitMusicDataForSportsFesButton" onclick="submitMusicDataForSportsFes(user)">
+                                                送信
+                                            </button>
+                                            <button class="m-1 button is-danger" onclick="closeModal('checkMusicError')">
+                                                戻る
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end checking modal --->
+
+                        <!--- modal for console error about musics --->
+                        <section>
+                            <div id="checkMusicInputError" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="checkMusicInputErrorMsg"></div>
+                                        </div>
+                                        <div>
+                                            <button class="m-1 button is-danger" onclick="closeModal('checkMusicInputError'); closeModal('checkMusicError')">
+                                                戻る
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end console error text modal --->
+
+                        <!--- modal for final confirmation about musics --->
+                        <section>
+                            <div id="showMusicMsgModal" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="showMusicMsg"></div>
+                                        </div>
+                                        <div>
+                                            <button class="m-1 button is-danger" onclick="closeModal('checkMusicInputError'); closeModal('showMusicMsgModal')">
+                                                戻る
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end final confirmation modal --->
+
+                    </section>
+
+                </div>
+                        
+        </section>
+        <!--- End section for Sports Festival  --->
+
+        <br />
+
         <section>
-          <div
-            class="tab-content"
-            id="topPage-content"
-          >
+            <div class="card card-content content">
+                Copyright <strong> IKEDA YUMA (220109@oks.city-saitama.ed.jp)</strong><br /><br />
+                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br /><br />
 
-            <?!= HtmlService.createHtmlOutputFromFile("topPage").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="instruction-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("instruction").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="kita_kore-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("kita_kore").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="kita_kore_book-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("kita_kore_book").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="log-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("log").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="club_mem-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("club_mem").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="dantai_mem-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("dantai_mem").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="admin-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("admin").getContent(); ?>
-          
-          </div>
-          <div
-            class="tab-content"
-            id="mode_offline-content"
-            style="display:none"
-          >
-          
-             <?!= HtmlService.createHtmlOutputFromFile("mode_offline").getContent(); ?>
-          
-          </div>
+                The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br /><br />
+
+                THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                <hr />
+                <section>
+                    <div class="has-text-centered is-size-5" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto; align-items: center;">
+                        <a target="_blank" style="color:inherit;" id="admin">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fa-solid fa-user"></i>
+                                </span>
+                                <span>
+                                  管理者ページ
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+                </section>
+            </div>
         </section>
-        <section>
-          <div class="card card-content content">
-            Copyright <strong> IKEDA YUMA (220109@oks.city-saitama.ed.jp)</strong><br /><br />
-            Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br /><br />
-
-            The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br /><br />
-
-            THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-          </div>
-        </section>
-
-    <? } else { ?>
-    
-        <section class="ml-2">
-          <div class="is-size-6">
-            放送部内部データベースにあなたの情報が登録されていません。
-          </div>
-        </section>
-
-    <? } ?>
-  </body>
+    </section>
+</body>
 </html>
 
-<script
-  src="https://code.jquery.com/jquery-3.6.4.min.js"
-  integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
-  crossorigin="anonymous"
-></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <script>
-  showLoadingOverlay();
+    user = <?= user ?>;
+    deadLine = <?= deadLine ?>;
+    url = document.getElementById("baseURL").value;
+    document.getElementById("reload").href = url;
+    document.getElementById("admin").href = url + "/admin?";
 
-  $(document).ready(function () {
-    let burger = $('.burger');
-    let menu = $('#' + burger.data('target'));
-    burger.on('click', function () {
-      burger.toggleClass('is-active');
-      menu.toggleClass('is-active');
+    document.addEventListener("DOMContentLoaded", function () {
+        showLoadingOverlay();
+        startLoadingAnimation();
+
+        document.getElementById("gmail").value = <?= gmail ?>;
+        document.getElementById("name").value = user;
+        document.getElementById("num").value = <?= class_num ?>;
+        document.getElementById("editThingsNotForSportsFes").style.display = 'none';
+        document.getElementById("formForSportsFes").style.display = 'none';
+
     });
-  });
 
-  function activateTab(to) {
-    const tabs = document.querySelectorAll('.tabs li');
-    const tabContents = document.getElementsByClassName('tab-content');
-    for (const tab of tabs) {
-      tab.className = '';
-      if (tab.id == to + '-tab') tab.className = 'is-active';
-    }
-    for (const content of tabContents) {
-      content.style.display = 'none';
-      if (content.id == to + '-content') content.style.display = 'block';
-    }
-  }
+    function startLoadingAnimation() {
+        const loadingText = document.getElementById("loadingText");
+        const loadingAnimation = document.getElementById("loadingAnimation");
+        const text = "接続中";
 
-  function set2fig(num) {
-    return String(num).padStart(2, '0');
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    showLoadingOverlay();
-    startLoadingAnimation();
-  });
-
-  function startLoadingAnimation() {
-    const loadingText = document.getElementById("loadingText");
-    const loadingAnimation = document.getElementById("loadingAnimation");
-    const text = "SIRIUS";
-    const animationDuration = 1400;
-    const cycles = 10; // 表示回数
-
-    let cycleCount = 0;
-
-    function updateText() {
-      loadingAnimation.textContent = text.slice(0, cycleCount % (text.length + 1));
-      cycleCount++;
-      if (cycleCount < (text.length + 1) * cycles) {
-        setTimeout(updateText, animationDuration / (text.length + 1));
-      }
-    }
-    updateText();
-  }
-
-  function showLoadingOverlay() {
-    document.getElementById("loadingOverlay").style.display = "flex";
-    google.script.run.withSuccessHandler(hideLoadingOverlay).getData("all");
-
-    var url = "<?= url ?>";
-    google.script.run.withSuccessHandler(displayQRCode).generateQRCode(url);
-  }
-
-  function hideLoadingOverlay() {
-    const talkClockElement = document.getElementById('talkClock');
-    const currentTime = new Date();
-    const currentHour = currentTime.getHours();
-    
-    let message = '';
-
-      message = 'こんばんは。';
-
-    talkClockElement.textContent = message;
-
-    google.script.run.withSuccessHandler(showData).getData('kitakou_collection_DB');
-    google.script.run.withSuccessHandler(showBook).getData('kita_colle_book_DB');
-    google.script.run.withSuccessHandler(showMem).getData('mem_DB');
-    google.script.run.withSuccessHandler(showDantai).getData('vertically_DB');
-    google.script.run.withSuccessHandler(showLog).getData('log_DB');
-
-    setTimeout(function() {
-      document.getElementById("loadingOverlay").style.display = "none";
-    }, 100);
-  }
-
-  function displayQRCode(imageUrl) {
-    var container = document.getElementById('qrcode-container');
-    container.innerHTML = "<img src='" + imageUrl + "'>";
-  }
-
-  function populateSheetNames(sheetNames) {
-    if(<?= department ?> === 'photo') {
-      document.getElementById("nfp").style.display = "none";
+        function updateText() {
+            loadingAnimation.textContent = text
+        }
+        updateText();
     }
 
-    var selectElement = document.getElementById("sheetName");
-
-    var defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = "PDF化するシートを選択";
-    selectElement.appendChild(defaultOption);
-
-    // シート名を追加
-    if (sheetNames) {
-      sheetNames.split(",").forEach(function(sheetName) {
-        var optionElement = document.createElement("option");
-        optionElement.value = sheetName;
-        optionElement.textContent = sheetName;
-        selectElement.appendChild(optionElement);
-      });
-    }
-  }
-
-  function updateInputValue() {
-    var selectElement = document.getElementById('sheetName');
-    var inputElement = document.getElementById('selectedSheet');
-
-    var selectedOptionText = selectElement.options[selectElement.selectedIndex].text;
-
-    inputElement.value = selectedOptionText;
-  }
-
-  function save_pdf() {
-    let name = document.getElementById("selectedSheet").value;
-    
-    if (name === "PDF化するシートを選択") {
-      alert("PDF化するシートを選択してください。");
-      setTimeout(function() {
-        document.getElementById('sheetName').selectedIndex = 0;
-        document.getElementById('selectedSheet').value = '';
-        document.getElementById('selectedSheet').placeholder = 'セレクトボックスから選択';
-      }, 500);
-      return;
+    function showLoadingOverlay() {
+        document.getElementById("loadingOverlay").style.display = "flex";
+        document.getElementById("loading-msg").textContent = "必要な情報を取得しています...";
+        google.script.run.withSuccessHandler(hideLoadingOverlay).getData("user_name");
     }
 
-    google.script.run.withSuccessHandler(alertSuccess).savePdf(name);
+    function hideLoadingOverlay() {
+        const talkClockElement = document.getElementById('talkClock');
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+        
+        document.getElementById("loading-msg").textContent = "ページを表示する準備をしています..."
 
-    setTimeout(function() {
-      document.getElementById('sheetName').selectedIndex = 0;
-      document.getElementById('selectedSheet').value = '';
-      document.getElementById('selectedSheet').placeholder = 'セレクトボックスから選択';
-    }, 1000);
-  }
-
-  function alertSuccess() {
-    window.alert("処理に成功しました。");
-  }
-
-  google.script.run.withSuccessHandler(populateSheetNames).getAllSheetNames();
-
-  function showClock() {
-    let nowTime = new Date();
-    let nowYoubi = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ][nowTime.getDay()];
-    let nowHour = set2fig(nowTime.getHours());
-    let nowMin = set2fig(nowTime.getMinutes());
-    let nowSec = set2fig(nowTime.getSeconds());
-    let currentTime = `${nowTime.getFullYear()} ${nowTime.getMonth() + 1}/${nowTime.getDay()}(${nowYoubi}) ${nowHour}:${nowMin}:${nowSec}`;
-    document.getElementById("CLOCK").innerHTML = currentTime;
-    document.getElementById("CLOCK_offline").innerHTML = currentTime;
-  }
-  setInterval(showClock, 100);
-
-  let isOnline = navigator.onLine;
-
-  window.addEventListener('online', function() {
-    document.getElementById('burger').style.display = "";
-    document.getElementById('navbarMenu').style.display = "";
-    isOnline = true;
-    document.getElementById('logo').style.pointerEvents = 'auto';
-    window.onbeforeunload = null;
-    activateTab('topPage');
-  });
-  
-  window.addEventListener('offline', function() {
-    document.getElementById('burger').style.display = "none";
-    document.getElementById('navbarMenu').style.display = "none";
-    isOnline = false;
-    document.getElementById('logo').style.pointerEvents = 'none';
-    activateTab('mode_offline');
-
-    window.onbeforeunload = function() {
-      if (!isOnline) {
-        return 'OFFLINE';
-      }
-    };
-  });
-
-  window.addEventListener('beforeunload', function(e) {
-    if (!isOnline) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  });
-
-  function updateElementText(elementId, text) {
-    document.getElementById(elementId).textContent = text;
-  }
-
-  google.script.run.withSuccessHandler(user_name => updateElementText('user_name', user_name + ' さんとして正常にログインされています。')).getData('user_name');
-
-  google.script.run.withSuccessHandler(shift => updateElementText('shift', 'シフトグループ: ' + shift)).getData('shift');
-
-  google.script.run.withSuccessHandler(countData => {
-    updateElementText('doneCount', countData.done);
-    updateElementText('unscheduledCount', countData.unscheduled);
-    updateElementText('waitingCount', countData.waiting);
-  }).getData('kitakou_collection_now');
-
-  function showData(kitakou_collection_db) {
-    var tableHeader = '<table class="table table_fixed is-fullwidth is-hoverable is-bordered is-size-6 is-size-7-mobile"><thead><tr><th>コード</th><th>氏名</th><th></th><th>教科</th><th>ステータス</th><th>担当部・同好会</th><th>撮影担当</th><th>撮影日時</th><th>撮影場所</th></tr></thead><tbody>';
-    document.getElementById('kitakou_collection_db').innerHTML = tableHeader +
-                                                                 kitakou_collection_db.map(row => '<tr>' + row.map(cell => '<td>' + cell + '</td>').join('') +
-                                                                 '</tr>').join('') +
-                                                                 '</tbody></table>';
-  }
-
-  function filterData() {
-    var statusFilter = document.getElementById('statusFilter').value;
-    var table = document.getElementById('kitakou_collection_db').getElementsByTagName('table')[0];
-    var allRows = table.querySelectorAll('tbody tr');
-
-    for (var i = 0; i < allRows.length; i++) {
-      var cellStatus = allRows[i].querySelector('td:nth-child(5)'); // Assuming status is in the 5th column
-      allRows[i].style.display = (statusFilter === 'all' || (cellStatus && cellStatus.textContent.includes(statusFilter))) ? "" : "none";
-    }
-  }
-
-  // function mem_search() {
-  //   const subject = document.getElementById("mem_search").value;
-  //   var table = document.getElementById('mem').getElementsByTagName('table')[0];
-  //   var allRows = table.querySelectorAll('tbody tr');
-
-  //   for (var i = 1; i < allRows.length; i++) {
-  //     var cell_1 = allRows[i].querySelector('td:nth-child(1)');
-  //     var cell_2 = allRows[i].querySelector('td:nth-child(2)');
-  //     var cell_3 = allRows[i].querySelector('td:nth-child(3)');
-  //     var cell_4 = allRows[i].querySelector('td:nth-child(4)');
-  //     allRows[i].style.display = ((cell_1 && cell_1.textContent.includes(subject)) || (cell_2 && cell_2.textContent.includes(subject)) || (cell_3 && cell_3.textContent.includes(subject)) || (cell_4 && cell_4.textContent.includes(subject))) ? "" : "none";
-  //   }
-  // }
-
-  function filterToday() {
-    var table = document.getElementById('kitakou_collection_db').getElementsByTagName('table')[0];
-    var allRows = table.querySelectorAll('tbody tr');
-
-    var currentKeyword = (new Date()).toLocaleDateString('ja-JP', { month: '2-digit', day: '2-digit', weekday: 'short' });
-
-    for (var i = 0; i < allRows.length; i++) {
-      var cellDate = allRows[i].querySelector('td:nth-child(8)');
-      allRows[i].style.display = (cellDate && cellDate.textContent.includes(currentKeyword)) ? "" : "none";
-    }
-  }
-
-  function resetFilter() {
-    document.getElementById('statusFilter').selectedIndex = 0;
-    google.script.run.withSuccessHandler(showData).getData('kitakou_collection_DB');
-  }
-  
-  function showBook(kita_colle_book_db) {
-    var table = '<table class="table table_fixed has-text-centered is-fullwidth is-narrow is-hoverable is-bordered is-size-6 is-size-7-mobile">';
-    for (var i = 0; i < kita_colle_book_db.length; i++) {
-      table += '<tr>';
-      for (var j = 0; j < kita_colle_book_db[i].length; j++) {
-        if (j === 0) {
-          table += '<td class="sticky-col">' + kita_colle_book_db[i][j] + '</td>';
+        let message = '';
+        if (currentHour >= 3 && currentHour < 9) {
+            message = 'おはようございます。';
+        } else if (currentHour < 18) {
+            message = 'こんにちは。';
         } else {
-          if (i >= 1 && j >= 1) {
-            var cellClass = kita_colle_book_db[i][j] === '-' ? 'has-background-white-ter' : '';
-            table += '<td class="' + cellClass + '" contenteditable="true" data-old-value="' + kita_colle_book_db[i][j] + '">' + kita_colle_book_db[i][j] + '</td>';
-          } else {
-            table += '<td>' + kita_colle_book_db[i][j] + '</td>';
-          }
+            message = 'こんばんは。';
         }
-      }
-      table += '</tr>';
+        talkClockElement.textContent = message;
+
+        google.script.run.withSuccessHandler(user_name => {
+            if(user_name === "ゲスト") {
+                updateElementText('user_name', 'ゲストさん、ようこそ。')
+            } else { 
+                updateElementText('user_name', user_name + ' さんとして接続されています。')
+            }
+            document.getElementById("loading-msg").textContent = "間もなく完了します..."
+        }).getData('user_name');
+
+        setTimeout(function() {
+            document.getElementById("loadingOverlay").style.display = "none";
+        }, 3000);
     }
-    table += '</table>';
-    document.getElementById('kita_colle_book_db').innerHTML = table;
 
-    document.querySelectorAll('[contenteditable="true"]').forEach(cell => {
-      cell.addEventListener('blur', function() {
-        var row = this.parentNode.rowIndex;
-        var col = this.cellIndex;
-        var newValue = this.textContent;
-        google.script.run.updateKitakoreBook(row, col, newValue);
-        google.script.run.setKitakoreBook();
-      })
-    });
-  }
+    function updateElementText(elementId, text) {
+        document.getElementById(elementId).innerHTML = text;
+    }
 
-  function reLoad() {
-    google.script.run.withSuccessHandler(showBook).getData('kita_colle_book_DB');
-  }
+    function sendThingsModal() {
+        let class_name = document.getElementById("class_name").value;
+        let gmail = document.getElementById("gmail").value;
+        let num = document.getElementById("num").value;
+        let name = document.getElementById("name").value;
 
-  function showLog(log) {
-    var table = '<table class="table is-fullwidth is-size-6 is-size-7-mobile"><tr><th>No.</th><th>送信者</th><th>部署</th><th>情報</th><th></th></tr>';
-    for (var i = 0; i < log.length; i++) {
-      table += '<tr>';
-      for (var j = 0; j < log[i].length; j++) {
-        var colorClass = '';
-        if (j === 2) {
-          switch (log[i][j]) {
-            case 'onkyou':
-              colorClass = 'has-text-primary';
-              break;
-            case 'sode':
-              colorClass = 'has-text-danger';
-              break;
-            case 'tyoukou':
-              colorClass = 'has-text-link';
-              break;
-            case '管理者':
-              colorClass = 'has-text-grey';
-              break;
-          }
+        document.getElementById("modalMsg").innerHTML = "<div>団体名：" + class_name + "</div><br /><div>代表者メールアドレス：" + gmail + "</div><br /><div>代表者学籍番号：" +num + "</div><br />" + "<div>代表者氏名：" + name + "</div><br /><p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>";
+        activeModal("checkText");
+    }
+
+    function activeModal(modal_name) {
+        document.getElementById(modal_name).classList.add("is-active");
+    }
+
+    function closeModal(modal_name) {
+        document.getElementById(modal_name).classList.remove("is-active");
+    }
+
+    function callsendClassData() {
+        document.getElementById("sendCheckedTextsBtn").classList.add("is-loading");
+        let class_name = document.getElementById("class_name").value;
+        let num = document.getElementById("num").value;
+        let gmail = document.getElementById("gmail").value;
+        let name = document.getElementById("name").value;
+        let eventName = <?= eventName ?>;
+
+        if(class_name === "" || gmail === "" || num === "" || name === "") {
+            document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
+            showMessage("checkTextErrorMsg", "checkTextError", "入力していない項目があるようです。「戻る」を押して、漏れなく入力してください。")
+        } else if(!name.includes(" ")) {
+            document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
+            showMessage("checkTextErrorMsg", "checkTextError", "姓と名の間に半角空白を挟んでください。")
+        } else {
+            google.script.run.withSuccessHandler(function(response) {
+
+                if(eventName.includes("体育祭")){
+                    if(response.classSheetName === "error") {
+                        document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
+                        closeModal('checkText');
+                        showMessage("checkTextErrorMsg", "checkTextError", response.msg + "改善しない場合は放送部に連絡をしてください。");
+                    } else {
+                        showFormForSportsFes(classSheetName);
+                        
+                        document.getElementById("class_name").value = "";
+                        document.getElementById("num").value = "";
+                        document.getElementById("gmail").value = "";
+                        document.getElementById("name").value = "";
+
+                        google.script.run.withSuccessHandler(function() {
+                            setTimeout(showMessage("checkTextErrorMsg", "checkTextError", "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力フォームに指示を入力してください。"),10)
+                            document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
+                            closeModal('checkText');
+                        }).sendData('Gmail', "団が登録されました", gmail, name, "団名: " + class_name + "\n\n代表者メールアドレス: " + gmail +"\n\n代表者学籍番号: " + num + "\n\n代表者氏名: " + name)
+                    }
+                } else {
+                    if(response.classData === "error" || response.classSheetName === "error") {
+                        document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
+                        closeModal('checkText');
+                        showMessage("checkTextErrorMsg", "checkTextError", response.msg + "改善しない場合は放送部に連絡をしてください。")
+                    } else {
+                        showTable(response.classData, response.classSheetName);
+                        document.getElementById("class_name").value = "";
+                        document.getElementById("num").value = "";
+                        document.getElementById("gmail").value = "";
+                        document.getElementById("name").value = "";
+                        google.script.run.withSuccessHandler(function() {
+                            setTimeout(showMessage("checkTextErrorMsg", "checkTextError", "送信されました。「戻る」ボタンを押し、下に表示される指示情報入力テーブルに指示を入力してください。"),10)
+                            document.getElementById("sendCheckedTextsBtn").classList.remove("is-loading");
+                            closeModal('checkText');
+                        }).sendData('Gmail', "団体が登録されました", gmail, name, "団体名: " + class_name + "\n\n代表者メールアドレス: " + gmail +"\n\n代表者学籍番号: " + num + "\n\n代表者氏名: " + name);
+                    }
+                }
+
+            }).sendData('classData', eventName, class_name, gmail, num, name);
         }
-        table += '<td class="' + colorClass + '">' + log[i][j] + '</td>';
-      }
-      table += '</tr>';
     }
-    table += '</table>';
-    document.getElementById('log_DB').innerHTML = table;
-  }
 
-  function sendLog() {
-    let msg = document.getElementById("msg").value;
-    let res = document.getElementById("submit");
-
-    res.classList.add("is-loading");
-
-    google.script.run.withSuccessHandler(function() {
-        document.getElementById("msg").value = "";
-        updateLog();
-      })
-      .sendLog(msg);
-  }
-
-  function updateLog() {
-    let res = document.getElementById("submit");
-    google.script.run.withSuccessHandler(function(log) {
-        res.classList.remove("is-loading");
-        showLog(log);
-      })
-      .getData('log_DB');
-  }
-
-  function showMem(mem) {
-    var table = '<table class="table table_fixed is-fullwidth is-narrow is-hoverable is-size-6 is-size-7-mobile"><tr><th>学籍番号</th><th>氏名</th><th>メールアドレス</th><th>部署</th><th></th><th>撮影グループ</th></tr>';
-    for (var i = 0; i < mem.length; i++) {
-      table += '<tr>';
-      for (var j = 0; j < mem[i].length; j++) {
-        table += '<td>' + mem[i][j] + '</td>';
-      }
-      table += '</tr>';
+    function showMessage(text_id, modal_id, message) {
+        document.getElementById(text_id).innerHTML = message;
+        activeModal(modal_id);
     }
-    table += '</table>';
-    document.getElementById('mem').innerHTML = table;
-  }
 
-  function showDantai(vertically_db) {
-    var table = '<table class="table table_fixed is-fullwidth is-narrow is-bordered is-hoverable is-size-6 is-size-7-mobile">';
-    for (var i = 0; i < vertically_db.length; i++) {
-      table += '<tr>';
-      for (var j = 0; j < vertically_db[i].length; j++) {
-        table += '<td>' + vertically_db[i][j] + '</td>';
-      }
-      table += '</tr>';
+    function searchClass() {
+        document.getElementById("searchBtn").classList.add("is-loading");
+
+        var eventName = <?= eventName ?>;
+
+        google.script.run.withSuccessHandler(function(found) {
+            if(eventName.includes("体育祭")) {
+                if (!found) {
+                    showMessage("searchErrorMsg", "searchErrorModal", "入力された団体が見つかりません。<br />あなたの学校用Gmailアカウント宛てに「団体が登録されました」というタイトルのメールが届いているか確認してください。");
+                    document.getElementById("searchBtn").classList.remove("is-loading");
+                } else {
+                    showMessage("searchErrorMsg", "searchErrorModal", "あなたが代表者となっている団の音源情報入力フォームを表示します。「戻る」を押してください。<br />音源の順番は、上から流す順に並ぶように入力してください。");
+
+                    google.script.run.withSuccessHandler(function(response) {
+                        document.getElementById("searchBtn").classList.remove("is-loading");
+                        document.getElementById("music_main").value = response.mainMusicData;
+                        document.getElementById("music_main_time").value = response.mainMusicTimeData;
+                        document.getElementById("remarksForMusic").innerHTML = response.remarksForMusic;
+                        for(let i = 0; i < response.classMusicNameData.length; i++) {
+
+                            document.getElementById(`music_${i + 1}`).value = response.classMusicNameData[i];
+                            document.getElementById(`music_${i + 1}_time`).value = response.classMusicTimeData[i];
+                            document.getElementById(`music_${i + 1}_fadeIn`).value = response.musicFadeInData[i];
+                            document.getElementById(`music_${i + 1}_fadeOut`).value = response.musicFadeOutData[i];
+
+                        };
+
+                        showFormForSportsFes(classSheetName);
+                    }).getData('classData_classSheetName', user, eventName);
+                }
+            } else {
+                if (!found) {
+                    showMessage("searchErrorMsg", "searchErrorModal", "入力された団体が見つかりません。<br />あなたの学校用Gmailアカウント宛てに「団体が登録されました」というタイトルのメールが届いているか確認してください。");
+                    document.getElementById("searchBtn").classList.remove("is-loading");
+                } else {
+                    showMessage("searchErrorMsg", "searchErrorModal", "あなたが代表者となっている団体の指示情報入力テーブルを表示します。「戻る」を押してください。");
+                    google.script.run.withSuccessHandler(function(response) {
+                        document.getElementById("searchBtn").classList.remove("is-loading");
+                        setTimeout(function() {
+                            showTable(response.classData, response.classSheetName);
+
+                            document.getElementById("mic_Cab").value = response.mic_Cab;
+                            document.getElementById("mic_WL").value = response.mic_WL;
+                            document.getElementById("micStand_Mini").value = response.micStand_Mini;
+                            document.getElementById("micStand_Big").value = response.micStand_Big;
+
+                            if(response.spot_left === "あり" && response.spot_right === "あり") {
+                                document.getElementById("spot").options[0].selected = true;
+                            } else if(response.spot_left === "あり") {
+                                document.getElementById("spot").options[1].selected = true;
+                            } else if(response.spot_right === "あり") {
+                                document.getElementById("spot").options[2].selected = true;
+                            }
+                            
+                            if(response.light === "あり") {
+                                document.getElementById("light").options[0].selected = true;
+                            } else {
+                                document.getElementById("light").options[1].selected = true;
+                            }
+                            
+                            if(response.projector === "あり") {
+                                document.getElementById("projector").options[0].selected = true;
+                            } else {
+                                document.getElementById("projector").options[1].selected = true;
+                            }
+
+                            document.getElementById("remarksForEvents").value = response.remarksForEvents;
+
+                            for(let i = 0; i < response.musicNameData.length; i++) {
+                                document.getElementById(`music_${i + 1}_event`).value = response.musicNameData[i];
+                                document.getElementById(`time_${i + 1}_event`).value = response.musicTimeData[i];
+                            }
+                        }, 1000);
+                    }).getData('classData_classSheetName', user, eventName);
+                }
+            }
+        }).searchClassName(user, eventName);
     }
-    table += '</table>';
-    document.getElementById('vertically_db').innerHTML = table;
-  }
+
+    function showTable(classData, classSheetName) {
+        document.getElementById("editThingsNotForSportsFes").style.display = '';
+
+        var table = '<table class="table is-fullwidth is-narrow is-bordered is-size-6"><tr><th class="sticky-col">時間</th><th>全体の流れ</th><th>大アリーナ内位置</th><th>緞帳</th><th>蛍光灯</th><th>ステージ照明</th><th>スポットライト</th><th>音源・動画</th>';
+        for (var i = 0; i < classData.length; i++) {
+            table += '<tr>';
+            for (var j = 0; j < classData[i].length; j++) {
+                if (j === 0) {
+                    table += '<td class="sticky-col" contenteditable="true">' + classData[i][j] + '</td>';
+                } else {
+                    if (i >= 0 && j >= 1) {
+                        var cellClass = classData[i][j] === '-' ? 'has-background-white-ter' : '';
+                        table += '<td class="' + cellClass + '" contenteditable="true" data-old-value="' + classData[i][j] + '">' + classData[i][j] + '</td>';
+                    } else {
+                        table += '<td>' + classData[i][j] + '</td>';
+                    }
+                }
+            }
+            table += '</tr>';
+        }
+        table += '</table>';
+        document.getElementById('editDataThings').innerHTML = table;
+        document.getElementById('classSheetName').innerHTML = classSheetName;
+        document.querySelectorAll('[contenteditable="true"]').forEach(cell => {
+            cell.addEventListener('blur', function() {
+                var row = this.parentNode.rowIndex;
+                var col = this.cellIndex;
+                var newValue = this.textContent;
+                google.script.run.upDateClassSheetName(row, col, newValue, classSheetName);
+            })
+        });
+    }
+
+    function showFormForSportsFes(classSheetName) {
+        document.getElementById("formForSportsFes").style.display = "";
+    }
+
+    function checkFormForSportsFes() {
+        activeModal("checkMusicError");
+
+        let musicCount = 0;
+        let musicNames = [];
+        let musicTimes = [];
+        let musicFadeInStr = [];
+        let musicFadeOutStr = [];
+        let music_main = document.getElementById("music_main").value;
+        let music_main_time = document.getElementById("music_main_time").value;
+        let message = `以下の音源内容を送信します。<br /><br />音源ファイル名: ${music_main}<br />音源全体の秒数: ${music_main_time}<br /><br />`;
+
+        for(let i = 1; i <= 10; i++) {
+            let musicName = document.getElementById(`music_${i}`).value;
+            let musicTime = document.getElementById(`music_${i}_time`).value;
+            let musicFadeIn = document.getElementById(`music_${i}_fadeIn`).value;
+            let musicFadeOut = document.getElementById(`music_${i}_fadeOut`).value;
+            
+            if(musicName && musicTime) {
+                musicCount++;
+                musicNames.push(musicName);
+                musicTimes.push(musicTime);
+                musicFadeInStr.push(musicFadeIn);
+                musicFadeOutStr.push(musicFadeOut);
+            } else if(musicName !== "" && musicTime === "" || musicName === "" && musicTime !== "") {
+                showMessage("checkMusicInputErrorMsg", "checkMusicInputError", "音源名と秒数はセットで入力してください。");
+                break;
+            }
+        }
+
+        if(musicCount > 0) {
+            for(let i = 0; i < musicNames.length; i++) {
+                message += `音源No.${i + 1}: ${musicNames[i]}<br />秒数   : ${musicTimes[i]}<br />フェードイン: ${musicFadeInStr[i]}<br />フェードアウト: ${musicFadeOutStr[i]}<br /><br />`;
+            }
+        }
+
+        document.getElementById("checkMusicErrorMsg").innerHTML = `<div>${message}</div>`;
+    }
+
+    function submitMusicDataForSportsFes(user) {
+        document.getElementById("submitMusicDataForSportsFesButton").classList.add("is-loading");
+
+        let musicNames = [];
+        let musicTimes = [];
+        let musicFadeInStr = [];
+        let musicFadeOutStr = [];
+
+        let music_main = document.getElementById("music_main").value;
+        let music_main_time = document.getElementById("music_main_time").value;
+        let remarksForMusic = document.getElementById("remarksForMusic").value;
+
+        for (let i = 1; i <= 10; i++) {
+            let musicName = document.getElementById(`music_${i}`).value;
+            let musicTime = document.getElementById(`music_${i}_time`).value;
+            let musicFadeIn = document.getElementById(`music_${i}_fadeIn`).value;
+            let musicFadeOut = document.getElementById(`music_${i}_fadeOut`).value;
+            musicNames.push(musicName);
+            musicTimes.push(musicTime);
+            musicFadeInStr.push(musicFadeIn);
+            musicFadeOutStr.push(musicFadeOut);
+        }
+
+        google.script.run.withSuccessHandler(function(msg) {
+            document.getElementById("submitMusicDataForSportsFesButton").classList.remove("is-loading");
+            showMessage("showMusicMsg", "showMusicMsgModal", msg + `<div class='is-size-5'>期日: ${deadLine}</div>`);
+            closeModal('checkMusicError');
+        }).sendData('MusicDataForSportsFes', music_main, music_main_time, user, musicNames, musicTimes, musicFadeInStr, musicFadeOutStr, remarksForMusic);
+    }
+
+    function checkFormNotForSportsFes() {
+        let mic_Cab = document.getElementById("mic_Cab").value;
+        let mic_WL = document.getElementById("mic_WL").value;
+        let micStand_Mini = document.getElementById("micStand_Mini").value;
+        let micStand_Big = document.getElementById("micStand_Big").value;
+        let spot = document.getElementById("spot").value;
+        let light = document.getElementById("light").value;
+        let projector = document.getElementById("projector").value;
+        let remarksForEvents = document.getElementById("remarksForEvents").value;
+
+        let musicCount = 0;
+        let musicNames = [];
+        let musicTimes = [];
+        let message = ``;
+
+        for (let i = 1; i <= 3; i++) {
+            let musicName = document.getElementById(`music_${i}_event`).value;
+            let musicTime = document.getElementById(`time_${i}_event`).value;
+            if(musicName && musicTime) {
+                musicCount++;
+                musicNames.push(musicName);
+                musicTimes.push(musicTime);
+            } else if(musicName !== "" && musicTime === "" || musicName === "" && musicTime !== "") {
+                showMessage("alertMsg", "alertModal", "音源名と秒数はセットで入力してください。");
+                break;
+            }
+        }
+
+        if(musicCount > 0) {
+            for(let i = 0; i < musicNames.length; i++) {
+                message += `音源No.${i + 1}: ${musicNames[i]}<br />秒数: ${musicTimes[i]}<br /><br />`;
+            }
+        }
+
+        if(5 <= mic_Cab || 4 <= mic_WL) {
+            showMessage("alertMsg", "alertModal", "マイクの本数が上限を超えています。1団体あたり、<br />有線マイクの上限 : 4本<br />無線マイクの上限 : 3本<br />までです。");
+        } else {
+            showMessage("endEditMsg", "endEditModal", `有線マイク : ${mic_Cab}本<br /><br  />無線マイク : ${mic_WL}本<br /><br  />小さいマイクスタンド : ${micStand_Mini}台<br /><br  />大きいマイクスタンド : ${micStand_Big}台<br /><br  />スポットライト : ${spot}<br /><br  />ステージ照明使用 : ${light}<br /><br  />プロジェクター使用 : ${projector}<br /><br />備考 : ${remarksForEvents}<br /><br />` + message + `<p>以上の入力内容を送信してもよろしいですか？<br /><div>(入力した内容はhttps通信によって暗号化されて送信されます)</div></p>`)
+        }
+    }
+
+    function submitDataNotForSportsFes(user) {
+        document.getElementById("submitDataNotForSportsFesButton").classList.add("is-loading");
+
+        let mic_Cab = document.getElementById("mic_Cab").value;
+        let mic_WL = document.getElementById("mic_WL").value;
+        let micStand_Mini = document.getElementById("micStand_Mini").value;
+        let micStand_Big = document.getElementById("micStand_Big").value;
+        let spot = document.getElementById("spot").value;
+        let light = document.getElementById("light").value;
+        let projector = document.getElementById("projector").value;
+        let remarksForEvents = document.getElementById("remarksForEvents").value;
+
+        let musicCount = 0;
+        let musicNames = [];
+        let musicTimes = [];
+
+        for (let i = 1; i <= 3; i++) {
+            let musicName = document.getElementById(`music_${i}_event`).value;
+            let musicTime = document.getElementById(`time_${i}_event`).value;
+            musicNames.push(musicName);
+            musicTimes.push(musicTime);
+        }
+
+        google.script.run.withSuccessHandler(function(msg) {
+            document.getElementById("submitDataNotForSportsFesButton").classList.remove("is-loading");
+            showMessage("alertMsg", "alertModal", msg + `<div class='is-size-5'>期日: ${deadLine}</div>`);
+            closeModal('endEditModal');
+        }).sendData('dataForOtherEvents', user, mic_Cab, mic_WL, micStand_Mini, micStand_Big, spot, light, projector, remarksForEvents, musicNames, musicTimes);
+    }
 
 </script>

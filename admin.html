@@ -1,3 +1,481 @@
-<section>
-  <p class="pl-3 is-size-4 is-size-6-mobile">COMING SOON...</p>
-</section>
+<!DOCTYPE html>
+<html>
+<head>
+        <base target="_top">
+        <title>Plform</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap" rel="stylesheet">
+        <link href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style>
+                .loading-overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: #fff;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                }
+
+                @keyframes fadeInOut {
+                    0% {
+                        opacity: 0;
+                    }
+                    25% {
+                        opacity: 1;
+                    }
+                    75% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0;
+                    }
+                }
+
+                #loadingAnimation {
+                    animation: fadeInOut 1500ms infinite;
+                    white-space: pre-line;
+                }
+
+                .sticky-col {
+                        position: sticky;
+                        left: 0;
+                        z-index: 20;
+                        background-color: white;
+                }
+
+                .btn-blue {
+                        background: #1e90ff;
+                        border-radius: 50px;
+                        position: relative;
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+                        margin: 0 auto;
+                        width: auto;
+                        max-width: 260px;
+                        min-width: 150px;
+                        padding: 10px 25px;
+                        color: #FFF;
+                        transition: 0.3s ease-in-out;
+                        font-weight: 500;
+                        border-radius: 20;
+                        zoom: 110%;
+                        border: none;
+                }
+
+                .btn-blue:hover {
+                        background: #ffffff;
+                        color: black;
+                }
+
+                .noselect {
+                    user-select: none;
+                    -webkit-user-select: none;
+                }
+        </style>
+</head>
+<body>
+    <section class="noselect" id="body">
+
+        <!--- start Loading Animation  --->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="pl-1 is-size-1 is-size-3-mobile has-text-centered" style="font-family: 'Noto Sans JP', sans-serif; color: #004aad"id="loadingText">
+                <span id="loadingAnimation"></span><br />
+                <span id="loading-msg" class="is-size-4 is-size-7-mobile"></span>
+
+                <br />
+                <hr />
+
+                <div class="is-size-5 is-size-7-mobile">
+                    管理者ページを開きます
+                </div>
+            </div>
+        </div>
+        <!--- end Loading Animation  --->
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                        <a class="navbar-item" href="<?= url ?>">
+                                <div class="is-size-2" style="font-family: 'Noto Sans JP', sans-serif;">Plform</div>
+                        </a>
+                </div>
+        </nav>
+
+        <div class="notification is-white p-4">
+
+            <div class="has-text-centered is-size-4 is-size-6-mobile" style="font-family: 'Noto Sans JP', sans-serif;" id="talkClock"></div>
+
+            <div class="has-text-centered is-size-4 is-size-6-mobile" style="font-family: 'Noto Sans JP', sans-serif;" id="user_name"></div>
+
+        </div>
+
+        <div id="form" class="mt-4 field control card" style="width:70vw; min-width:350px; max-width:800px; margin-right:auto; margin-left: auto;">
+                <section>
+                    <div class="my-2 is-size-4-tablet is-size-5-mobile has-text-centered card-header card-header-title is-centered">
+                        <strong>大宮北高校放送部 管理者ページ</strong><br />
+                    </div>
+
+                    <br/>
+                    <br/>
+
+                    <div class="mx-2 pt-0 card-content" id="verification">
+
+                        <label class="label">認証</label>
+                        <input class="input" id="verificationCode" type="password" placeholder="認証コードを入力">
+
+                        <br />
+                        <br />
+
+                        <button class="is-size-6 button btn-blue" onclick="verificationAdmin()" id="verificationAdmin">
+                            照合
+                        </button>
+                    </div>
+
+                    <!--- modal for checking verificationCode --->
+                    <section>
+                        <div id="showMsgModal" class="modal">
+                            <div class="modal-background"></div>
+                            <div class="modal-content">
+                                <div class="box">
+                                    <div class="message is-info">
+                                        <div class="message-body" id="showMsg"></div>
+                                    </div>
+                                    <button class="m-1 button is-danger" onclick='closeModal("showMsgModal")'>
+                                        戻る
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--- end checking verificationCode modal -->
+
+                    <div class="mx-2 pt-0 card-content" id="edit">
+
+                        <label class="label">行事名</label>
+                        <input class="input" id="eventName" type="text" placeholder="行事名を入力">
+
+                        <br />
+                        <br />
+
+                        <label class="label">指示書提出期限</label>
+                        <input class="input" id="deadLine" type="text" placeholder="提出期限を入力(20XX/mm/dd)">
+
+                        <br />
+                        <hr />
+                        <br />
+
+                        <section id="inputs">
+                            <input class="input" id="info_" type="text">
+                        </section>
+
+                        <button class="is-size-6 button btn-blue" onclick="checkSendThings()">
+                            確認
+                        </button>
+
+                        <hr />
+
+                        <button class="is-size-6 button btn-blue" onclick="activeModal('addClassModal')">
+                            団体の追加
+                        </button>
+
+                        <!--- modal for checking things --->
+                        <section>
+                            <div id="checkModal" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="checkMsg"></div>
+                                        </div>
+                                        <button class="m-1 button is-info" onclick='callsendData()' id="sendAdminOpe">
+                                            送信
+                                        </button>
+                                        <button class="m-1 button is-danger" onclick='closeModal("checkModal")'>
+                                            戻る
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end checking things modal -->
+
+                        <!--- modal for show msg --->
+                        <section>
+                            <div id="msgModal" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body" id="msg"></div>
+                                        </div>
+                                        <button class="m-1 button is-danger" onclick='closeModal("msgModal"); closeModal("checkModal")'>
+                                            戻る
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end show msg modal -->
+
+                        <!--- modal for add Class --->
+                        <section>
+                            <div id="addClassModal" class="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-content">
+                                    <div class="box">
+                                        <div class="message is-info">
+                                            <div class="message-body">
+                                                <label class="label">追加する団体名</label>
+                                                <input class="input" type="text" id="new_class_name" placeholder="正式な団体名を入力">
+
+                                                <br />
+                                                <br />
+
+                                                <label class="label">追加する団体名のメールアドレス</label>
+                                                <input class="input" type="text" id="new_address" placeholder="半角で入力">  
+
+                                                <br />
+                                                <br />
+
+                                                <label class="label">追加する団体名の代表者学籍番号</label>
+                                                <input class="input" id="new_num" type="number" placeholder="半角数字で入力" max="3900" min="1100">
+
+                                                <br />
+                                                <br />
+
+                                                <label class="label">追加する団体名の代表者氏名</label>
+                                                <input class="input" type="text" id="new_name" placeholder="氏名を入力(姓と名の間は半角空白で開ける)">
+                                            </div>
+                                        </div>
+                                        <button class="m-1 button is-info" onclick='addClass()' id="sendDataAddBtn">
+                                            送信
+                                        </button>
+                                        <button class="m-1 button is-danger" onclick='closeModal("addClassModal")'>
+                                            戻る
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--- end add Class -->
+
+                    </div>
+
+                </section>
+        </div>
+    </section>
+</body>
+</html>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        showLoadingOverlay();
+        startLoadingAnimation();
+        document.getElementById("edit").style.display = "none";
+    });
+
+    function startLoadingAnimation() {
+        const loadingText = document.getElementById("loadingText");
+        const loadingAnimation = document.getElementById("loadingAnimation");
+        const text = "ADMIN PAGE<br>接続中";
+
+        function updateText() {
+            loadingAnimation.innerHTML = text
+        }
+        updateText();
+    }
+
+    function showLoadingOverlay() {
+        document.getElementById("loadingOverlay").style.display = "flex";
+        document.getElementById("loading-msg").textContent = "必要な情報を取得しています...";
+        google.script.run.withSuccessHandler(hideLoadingOverlay).getData("user_name");
+    }
+
+    function hideLoadingOverlay() {
+        const talkClockElement = document.getElementById('talkClock');
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+        
+        document.getElementById("loading-msg").textContent = "ページを表示する準備をしています..."
+
+        let message = '';
+        if(3 < currentHour && currentHour < 9) {
+            message = 'おはようございます。';
+        } else if(currentHour < 18) {
+            message = 'こんにちは。';
+        } else {
+            message = 'こんばんは。';
+        }
+        talkClockElement.textContent = message;
+
+        google.script.run.withSuccessHandler(user_name => {
+            if(user_name === "ゲスト") {
+                updateElementText('user_name', 'ゲストさん、ようこそ。')
+            } else { 
+                updateElementText('user_name', user_name + ' さんとして接続されています。')
+            }
+            document.getElementById("loading-msg").textContent = "間もなく完了します..."
+        }).getData('user_name');
+
+        setTimeout(function() {
+            document.getElementById("loadingOverlay").style.display = "none";
+        }, 3000);
+    }
+
+    function updateElementText(elementId, text) {
+        document.getElementById(elementId).innerHTML = text;
+    }
+
+    function verificationAdmin() {
+        document.getElementById("verificationAdmin").classList.add("is-loading");
+        let code = document.getElementById("verificationCode").value;
+
+        google.script.run.withSuccessHandler(function(response) {
+            if(response.msg.includes("200")) {
+                showMessage("showMsg", "showMsgModal", response.msg + "認証に成功しました。");
+                document.getElementById("verificationAdmin").classList.remove("is-loading");
+                document.getElementById("verification").style.display = "none";
+                document.getElementById("edit").style.display = "";
+                document.getElementById("eventName").value = response.eventName;
+                document.getElementById("deadLine").value = response.deadLine;
+                console.log(response.sheetNames);
+                addDbInfoInputs(response.dbInfo);
+            } else {
+                showMessage("showMsg", "showMsgModal", response.msg + "認証に失敗しました。");
+                document.getElementById("verificationAdmin").classList.remove("is-loading");
+            }
+            
+        }).getData("AdminInfomation", code)
+    }
+
+    function addDbInfoInputs(dbInfo) {
+        const container = document.getElementById("inputs");
+        const existingInputs = container.querySelectorAll('input[id^="info_"]');
+        existingInputs.forEach(input => input.remove());
+
+        const columnHeaders = ["行事名","団体名", "アドレス", "代表者学籍番号", "代表者氏名"];
+
+        dbInfo.forEach((infoRow, rowIndex) => {
+            infoRow.forEach((info, columnIndex) => {
+                const label = document.createElement("label");
+                label.innerHTML = `団体${rowIndex + 1}-${columnHeaders[columnIndex]}`;
+                label.className = "label";
+                container.appendChild(label);
+
+                const input = document.createElement("input");
+                input.type = "text";
+                input.className = "input";
+                input.id = `info_${rowIndex}_${columnIndex}`;
+                input.placeholder = "団体情報を入力";
+                input.value = info; // Set the value from the 2D array
+                container.appendChild(input);
+                container.appendChild(document.createElement("br"));
+                container.appendChild(document.createElement("br"));
+
+                if(columnHeaders[columnIndex] === "代表者氏名") {
+                    const hr = document.createElement("hr");
+                    container.appendChild(hr);
+                }
+            });
+        });
+    }
+
+    function activeModal(modal_name) {
+        document.getElementById(modal_name).classList.add("is-active");
+    }
+
+    function closeModal(modal_name) {
+        document.getElementById(modal_name).classList.remove("is-active");
+    }
+
+    function showMessage(text_id, modal_id, message) {
+        document.getElementById(text_id).innerHTML = message;
+        activeModal(modal_id);
+    }
+
+    function checkSendThings() {
+        let new_eventName = document.getElementById("eventName").value;
+        let new_deadLine = document.getElementById("deadLine").value;
+        let inputsContainer = document.getElementById("inputs");
+        let inputs = inputsContainer.querySelectorAll('input[id^="info_"]');
+        let new_dbInfo = [];
+
+        // Organize inputs by row and column
+        let rowIndex = 0;
+        let columnIndex = 0;
+        inputs.forEach(input => {
+            if(columnIndex === 0) {
+                new_dbInfo[rowIndex] = [];
+            }
+            new_dbInfo[rowIndex][columnIndex] = input.value;
+            columnIndex++;
+            if(columnIndex >= 5) {
+                columnIndex = 0;
+                rowIndex++;
+            }
+        });
+
+        let msg = "変更後の行事名 : " + new_eventName + "<br /><br />変更後の指示書提出期限 : " + new_deadLine + "<br /><br />";
+
+        new_dbInfo.forEach((infoRow, rowIndex) => {
+            let infoString = infoRow.join(", ");
+            msg += `団体${rowIndex + 1} : ${infoString}<br /><br />`;
+        });
+
+        showMessage("checkMsg", "checkModal", msg);
+    }
+
+    function callsendData() {
+        document.getElementById("sendAdminOpe").classList.add("is-loading");
+        let new_eventName = document.getElementById("eventName").value;
+        let new_deadLine = document.getElementById("deadLine").value;
+        let inputsContainer = document.getElementById("inputs");
+        let inputs = inputsContainer.querySelectorAll('input[id^="info_"]');
+        let new_dbInfo = [];
+        let row = [];
+        inputs.forEach((input, index) => {
+            row.push(input.value);
+            if((index + 1) % 5 === 0 || index === inputs.length - 1) {
+                new_dbInfo.push(row);
+                row = [];
+            }
+        });
+
+        google.script.run.withSuccessHandler(function(msg) {
+            document.getElementById("sendAdminOpe").classList.remove("is-loading");
+            showMessage("msg", "msgModal", msg);
+        }).sendData("AdminOperation", new_eventName, new_deadLine, new_dbInfo);
+    }
+
+    function addClass() {
+        document.getElementById("sendDataAddBtn").classList.add("is-loading");
+
+        let className = document.getElementById("new_class_name").value;
+        let address = document.getElementById("new_address").value;
+        let num = document.getElementById("new_num").value;
+        let name = document.getElementById("new_name").value;
+        
+        if(className === "" || address === "" || num === "" || name === "") {
+            document.getElementById("sendDataAddBtn").classList.remove("is-loading");
+            closeModal("addClassModal");
+            showMessage("msg", "msgModal", "空白の欄があります。すべて入力してから送信してください。");
+        } else {
+            google.script.run.withSuccessHandler(function(msg) {
+                document.getElementById("sendDataAddBtn").classList.remove("is-loading");
+                closeModal("addClassModal");
+                showMessage("msg", "msgModal", msg);
+            }).sendData("addClass", className, address, num, name);
+        }
+    }
+
+</script>
